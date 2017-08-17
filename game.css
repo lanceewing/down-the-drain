@@ -1,0 +1,145 @@
+* {  
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  -o-user-select: none;       /* Opera */
+  user-select: none;          /* Likely future */
+}
+body {
+  background: #0c161d;
+  color: #AD9E7B;
+  font-family: courier new;
+  font-size: 24px;
+}
+span {
+  display: inline-block;
+}
+#sentence {
+  width: 960px;
+  height: 33px;
+  text-align: center;
+  line-height: 33px;
+  color: white;
+}
+#controls {
+  width: 960px;
+  height: 138px;
+}
+#controls div {
+  float: left;
+}
+#arrows {
+  width: 42px;
+}
+#arrows span {
+  font-size: 50px;
+  height: 67px;
+  width: 40px;
+  line-height: 78px;
+  text-align: center;
+  background-color: #524531;
+  margin: 1px;
+}
+#arrows span:hover {
+  color: yellow;
+}
+#items {
+  width: 308px;
+  height: 136px;
+  background-color: #524531;
+  margin: 1px;
+  overflow: hidden;
+  position: relative;
+}
+#itemlist {
+  position: absolute;
+  left: 0px;
+  padding: 4px;
+}
+#itemlist span {
+  width: 300px;
+}
+#itemlist span:hover {
+  color: yellow;
+}
+#commands {
+  width: 608px;
+  color: #AD9E7B;
+  font-size: 26px;
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+}
+#commands span {
+  background-color: #524531;
+  width: 150px;
+  margin: 1px;
+  height: 44px;
+  text-align: center;
+  line-height: 44px;
+}
+#commands span:hover {
+  color: yellow;
+}
+#wrap {
+  background-color: #000;
+  margin: auto;
+  width: 960px;
+  height: 600px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  cursor: crosshair;
+}
+#screen {
+  position: relative;
+  width: 960px;
+  height: 430px;
+  overflow: hidden;
+  background-color: #333333;
+}
+#screen * {
+  position: absolute;
+}
+#bricks {
+  top: 50px;
+  width: 960px;
+  height: 210px;
+  z-index: 5;
+}
+.bricks {
+  /*background-image: linear-gradient(#265D96,#B2CDDE);*/
+  background-color: transparent;
+  background-image: 
+    linear-gradient(335deg, rgba(80, 80, 80, 0.2) 23px, transparent 23px),
+    linear-gradient(155deg, rgba(88, 88, 88, 0.3) 23px, transparent 23px),
+    linear-gradient(335deg, rgba(80, 80, 80, 0.2) 23px, transparent 23px),
+    linear-gradient(155deg, rgba(88, 88, 88, 0.3) 23px, transparent 23px);
+  background-size: 58px 58px;	
+  background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
+}
+#water {
+  background: 
+    linear-gradient(#444444 33%, rgba(255,255,255,0) 0) 0 0,
+    linear-gradient(#222222 30%, rgba(255,255,255,0) 0) 0 30px,
+    radial-gradient(circle closest-side, #222222 55%, rgba(255,255,255,0) 0) 0 0,
+    radial-gradient(circle closest-side, #222222 55%, rgba(255,255,255,0) 0) 55px 0 rgb(108,141,36);
+  background-size:110px 100px;
+  background-repeat:repeat-x;
+
+  width: 960px;
+  height: 100px;
+  bottom: 0px;
+  z-index: 0;
+}
+#wall {
+  top: 0px;
+  height: 262px;
+  z-index: 0;
+}
+#light {
+  top: 0px;
+  height: 262px;
+  width: 960px;
+  z-index: 10;
+}
