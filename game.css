@@ -101,6 +101,16 @@ span {
 #screen * {
   position: absolute;
 }
+#shadow {
+  bottom: 0px;
+  width: 960px;
+  height: 215px;
+  z-index: 1;
+}
+.shadow {
+  background-color: black;
+  border-radius: 50%;
+}
 #bricks {
   top: 50px;
   width: 960px;
