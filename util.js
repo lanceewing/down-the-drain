@@ -13,12 +13,13 @@ $.Util = {};
  * @param {number} y The y position of the filled circle.
  * @param {number} d The diameter of the filled circle.
  */
-$.Util.fillCircle = function(ctx, x, y, d) {
+$.Util.fillCircle = function(ctx, x, y, d, angle, drawBorder) {
   var r = d / 2;
   ctx.beginPath();
-  ctx.arc(x + r, y + r, r, 0, 2 * Math.PI);
+  ctx.arc(x + r, y + r, r, 0, angle * Math.PI);
   ctx.closePath();
   ctx.fill();
+  if (drawBorder) ctx.stroke();
 };
 
 /**
@@ -48,6 +49,102 @@ $.Util.renderShadow = function(size) {
   shadow.style.width = size + 'px';
   shadow.style.height = (size / 5) + 'px';
   return shadow;
+};
+
+/**
+ * 
+ */
+$.Util.renderPerson = function(w, h, direction, c) {
+  var ctx = $.Util.create2dContext(w, h);
+
+  var ballSize = (w / 5);
+  
+  // Hat ball on top
+  ctx.lineWidth = 4;
+  ctx.fillStyle = 'grey';
+  $.Util.fillCircle(ctx, (w / 2) - (ballSize / 2), 0, ballSize, 2, true);
+  
+  // Head
+  var headSize = w - (w / 5);
+  var headStart = ballSize - (ballSize / 5);
+  ctx.fillStyle = 'grey';
+  $.Util.fillCircle(ctx, 0 + ((w - headSize) / 2), headStart, headSize, 2, true);
+  
+  // Hat
+  ctx.fillStyle = 'white';
+  $.Util.fillCircle(ctx, 0 + ((w - headSize) / 2), headStart, headSize, 1, true);
+  
+  // Neck
+  var neckStart = headStart + headSize;
+  //ctx.beginPath();
+  //ctx.moveTo(w / 2, neckStart);
+  //ctx.lineTo(w / 2, neckStart + ballSize / 2);
+  //ctx.closePath();
+  //ctx.stroke();
+  
+  var bodyStart = neckStart;// + ballSize;// / 2;
+  var packStart = bodyStart + (w / 10);
+  
+  // Backpack
+  var packWidth = (w / 2.75);
+  ctx.fillStyle = 'red';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  if (direction != 0) {
+    ctx.rect(w / 2, packStart, -packWidth, headSize);
+  }
+  if (direction != 1) {
+    ctx.rect(w / 2, packStart, packWidth, headSize);
+  }
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  
+  // Body
+  var bodyBottom = bodyStart + w + (w / 1.5);
+  var shoulderWidth = w / 6;
+  ctx.fillStyle = 'grey';
+  ctx.beginPath();
+  ctx.moveTo(w / 2, bodyStart);
+  ctx.lineTo((w / 2) - shoulderWidth, bodyStart);
+  if (direction != 1) {
+    // Draw left point
+    ctx.lineTo(3, bodyBottom);
+  }
+  ctx.lineTo((w / 2) - shoulderWidth, bodyBottom);
+  ctx.lineTo((w / 2) + shoulderWidth, bodyBottom);
+  if (direction != 0) {
+    // Draw right point
+    ctx.lineTo(w - 3, bodyBottom);
+  }
+  ctx.lineTo((w / 2) + shoulderWidth, bodyStart);
+  ctx.lineTo(w / 2, bodyStart);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  
+  if (direction == 3) {
+    ctx.fillStyle = 'red';
+    ctx.beginPath();
+    ctx.rect((w / 2) - packWidth, packStart, packWidth * 2, headSize);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+  
+  // Legs
+  var legLength = h - bodyBottom;
+  var leftFactor = ((0.5 + (c * 0.5)) % 1);
+  var rightFactor = ((leftFactor + 0.5) % 1);
+  ctx.beginPath();
+  ctx.moveTo((w / 2) - shoulderWidth, bodyBottom);
+  ctx.lineTo((w / 2) - shoulderWidth, bodyBottom + legLength * leftFactor);
+  ctx.moveTo((w / 2) + shoulderWidth, bodyBottom);
+  ctx.lineTo((w / 2) + shoulderWidth, bodyBottom + legLength * rightFactor);
+  ctx.closePath();
+  ctx.stroke();
+  
+  return ctx.canvas;
 };
 
 /**

@@ -58,11 +58,11 @@ $.Game = {
     
     // Set up the keyboard & mouse event handlers (size reduced way)
     $.screen.onmousedown = function(e) {
-      $.Game.mouseButton = 1;
+      if (e.button === 0) $.Game.mouseButton = 1;
       e.preventDefault();
     };
     $.screen.onmouseup = function(e) {
-      $.Game.mouseButton = 0;
+      if (e.button === 0) $.Game.mouseButton = 0;
       e.preventDefault();
     };
     $.screen.onmousemove = function(e) {

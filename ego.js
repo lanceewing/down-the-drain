@@ -5,11 +5,9 @@
  * 
  * @constructor
  * @extends Actor
- * @property {number} power The amount of golden power that Ego currently has.
- * @property {number} rocks The number of rocks that Ego is currently carrying.
  */
 $.Ego = function() {
-  $.Actor.call(this, 50, 'rgb(197,179,88)', 0.95, 5);
+  $.Actor.call(this, 50, 150, 'rgb(197,179,88)', 0.95, 5);
   this.sprite.classList.add('ego');
   this.setDirection($.Sprite.OUT);
   this.power = 0;
@@ -30,8 +28,6 @@ $.Ego.prototype.update = function() {
   // Mask out left/right/in/out but retain the current jumping directions.
   var direction = (this.direction & $.Sprite.UP_DOWN);
   
-  // TODO: Update the direction
-  
   if ($.Game.mouseButton) {
     $.Game.mouseButton = 0;
     this.destZ = $.Game.yMouse * 2;
@@ -39,23 +35,33 @@ $.Ego.prototype.update = function() {
   }
   
   if ((this.destX != -1) && (this.destZ != -1)) {
-	if (this.touching({cx: this.destX, cy: this.cy, z: this.destZ, radius: -this.radius}, 20)) {
-	  if (this.step > 1) {
-		this.reset();
-	  } else {
-	    this.destX = this.destZ = -1;
-	    this.heading = null;
-	  }
+	  if (this.touching({cx: this.destX, cy: this.cy, z: this.destZ, radius: -this.radius}, 20)) {
+	    if (this.step > 1) {
+		    this.reset();
+	    } else {
+	      this.destX = this.destZ = -1;
+	      this.heading = null;
+	    }
     } else {
       this.heading = Math.atan2(this.destZ - $.ego.z, this.destX - $.ego.cx);
     }
   }
   
-  // Update Ego's direction to what was calculated above. The move method will use this 
-  // when moving Ego. The direction is converted into a heading within setDirection.
+  // Convert the heading to a direction value.
+  if (Math.abs(this.heading) > 2.356) {
+    direction |= $.Sprite.LEFT;
+  } else if (Math.abs(this.heading) < 0.785) {
+    direction |= $.Sprite.RIGHT;
+  } else if (this.heading > 0) {
+    direction |= $.Sprite.IN;
+  } else {
+    direction |= $.Sprite.OUT;
+  }
+  
+  // Update Ego's direction to what was calculated above.
   this.setDirection(direction);
   
-  // Move Ego based on it's direction and heading.
+  // Move Ego based on it's heading.
   this.move();
 
   // The hit method sets the bounce flag, and it is cleared here.

@@ -3,13 +3,14 @@
  *
  * @constructor
  * @param {number} size The size of the Sprite in pixels. Used for size in all three dimensions.
+ * 
  * @param {string} colour The base colour of the Sprite. Used when rendering the background image sprite sheet.
  * @param {number} texture The amount of random variation in the surface colour of the Sprite.
  * @param {number} xzstep The step size for the x and z directions. This is the max number of pixels to move every frame.
  * @param {number} ystep The step size for the y direction. This is the max number of pixels to move every frame.
  * @param {number} g The gravity acceleration. This can be different for different sprites. Currently used by Enemy only.
  */
-$.Sprite = function(size, colour, texture, xzstep, ystep, g) {
+$.Sprite = function(size, height, colour, texture, xzstep, ystep, g) {
   this.x = 0;
   this.y = 0;
   this.z = 0;
@@ -20,6 +21,7 @@ $.Sprite = function(size, colour, texture, xzstep, ystep, g) {
   this.moved = false;
   this.positions = [];
   this.size = size;
+  this.height = height;
   this.radius = size / 2;
   this.colour = colour;
   this.texture = texture;
@@ -32,7 +34,8 @@ $.Sprite = function(size, colour, texture, xzstep, ystep, g) {
   this.sprite.appendChild(this.surfaceShadow);
   
   var style = this.sprite.style;
-  style.width = style.height = (this.size + 'px');
+  style.width = (this.size + 'px');
+  style.height = (this.height + 'px');
   
   this.canvas = this.buildCanvas();
   
@@ -167,7 +170,7 @@ $.Sprite.prototype.setPosition = function(x, y, z) {
   this.cz = z - this.radius;
 
   // Update the style of the sprite and shadow elements to reflect the new position.
-  var top = this.top = Math.floor(this.z / 2) - this.size - Math.floor(this.y);
+  var top = this.top = Math.floor(this.z / 2) - this.height - Math.floor(this.y);
   this.shadow.style.top = ((this.z / 2) - this.shadowOffset - 215) + 'px';
   this.shadow.style.left = (this.x) + 'px';
   this.shadow.style.opacity = 0.9 - (y * (1.0/400));
@@ -216,12 +219,12 @@ $.Sprite.prototype.setDirection = function(direction) {
       }
     }
     
-    // Convert the direction into a heading, but only if LEFT, RIGHT, IN, or OUT are set.
-    if (direction & 0x0F) {
-      this.heading = $.Util.dirToHeading(direction);
-    } else {
-      this.heading = null;
-    }
+//    // Convert the direction into a heading, but only if LEFT, RIGHT, IN, or OUT are set.
+//    if (direction & 0x0F) {
+//      this.heading = $.Util.dirToHeading(direction);
+//    } else {
+//      this.heading = null;
+//    }
   }
 };
 

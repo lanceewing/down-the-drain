@@ -21,11 +21,13 @@ $.Actor.prototype.constructor = $.Actor;
  */
 $.Actor.prototype.buildCanvas = function() {
   // Create a single canvas to render the sprite sheet for the four directions.
-  var ctx = $.Util.create2dContext(this.size * 4, this.size);
+  var ctx = $.Util.create2dContext(this.size * 4, this.size * 3 * 3);
   
   // For each direction, render the Actor facing in that direction.
-  for (var d = 0; d < 4; d++) {
-    ctx.drawImage($.Util.renderSphere(this.size, d + 1, this.colour, this.texture, 'black'), d * this.size, 0);
+  for (var c = 0; c < 3; c++) {
+    for (var d = 0; d < 4; d++) {
+      ctx.drawImage($.Util.renderPerson(this.size, this.size * 3, d, c), d * this.size, c * this.size * 3);
+    }
   }
   
   return ctx.canvas;
