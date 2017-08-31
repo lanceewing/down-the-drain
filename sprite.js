@@ -58,6 +58,7 @@ $.Sprite = function(size, height, colour, texture, xzstep, ystep, g) {
   this.facing = 1;
   this.destZ = -1;
   this.destX = -1;
+  this.cell = 0;
 };
 
 /**
@@ -200,31 +201,23 @@ $.Sprite.UP_DOWN = ($.Sprite.UP | $.Sprite.DOWN);
  * @param {number} direction A bit mask that identifies the new direction of the Sprite.
  */
 $.Sprite.prototype.setDirection = function(direction) {
-  if (direction != this.direction) {
+  if (direction && direction != this.direction) {
     this.directionLast = this.direction;
     this.direction = direction;
 
     // Convert the direction to a facing direction by shifting right until we find
     // a 1. There are only four facing directions.
     for (var facing = 0; facing <= 4 && !((direction >> facing++) & 1););
-
-    // If the canvas width is greater than the Sprite size, it means that the sprite
-    // sheet has multiple appearances or costumes, each which relates to a facing direction.
-    if (this.canvas && (this.canvas.width > this.size)) {
-      // Adjust the background position to show the correct part of the sprite sheet for the direction.
-      if ((facing <= 4) && (facing != this.facing)) {
-        this.backgroundX = (-((facing - 1) * this.size));
-        this.sprite.style.backgroundPosition = this.backgroundX + 'px ' + this.backgroundY + 'px';
-        this.facing = facing;
-      }
-    }
     
-//    // Convert the direction into a heading, but only if LEFT, RIGHT, IN, or OUT are set.
-//    if (direction & 0x0F) {
-//      this.heading = $.Util.dirToHeading(direction);
-//    } else {
-//      this.heading = null;
-//    }
+    this.facing = facing;
+  }
+
+  // If the canvas width is greater than the Sprite size, it means that the sprite
+  // sheet has multiple appearances or costumes, each which relates to a facing direction.
+  if (this.canvas && (this.canvas.width > this.size)) {
+    // Adjust the background position to show the correct part of the sprite sheet for the direction.
+    this.backgroundX = (-((this.facing - 1) * this.size));
+    this.sprite.style.backgroundPosition = this.backgroundX + 'px ' + (this.backgroundY + (~~(this.cell/10) * this.height)) + 'px';
   }
 };
 
@@ -264,9 +257,9 @@ $.Sprite.prototype.move = function() {
       
       // Check whether a room edge has been hit.
       if (x < -(this.size)) edge = [-1, 0];
-      if (x > 700) edge = [1, 0];
-      if (z < 500) edge = [0, -1];
-      if (z > 1040) edge = [0, 1];
+      if (x > 960) edge = [1, 0];
+      if (z < 530) edge = [0, -1];
+      if (z > 647) edge = [0, 1];
       
       // Increment the step size the step increment, capping at the max step.
       if ((this.step += this.stepInc) > this.maxStep) this.step = this.maxStep;
@@ -338,23 +331,6 @@ $.Sprite.prototype.move = function() {
 $.Sprite.prototype.update = function() {
   if (!this.moved) {
     this.move();
-  }
-  
-  // Move the surface shadow.
-  if (this.egoOn) {
-    if (($.ego.z + $.ego.radius) >= this.z) {
-      if (this.egoOn == 2) {
-        this.surfaceShadow.style.left = ($.ego.cx - this.x) + 'px';
-        this.surfaceShadow.style.top = (($.ego.top - this.top) + $.ego.size - 5) + 'px';
-        this.surfaceShadow.style.display = 'block';
-        this.egoOn--;
-      } else if (!this.touching($.ego, 10)) {
-        this.surfaceShadow.style.display = 'none';
-        this.egoOn--;
-      }
-    } else {
-      this.surfaceShadow.style.display = 'none';
-    }
   }
 };
 

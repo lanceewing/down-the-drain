@@ -10,8 +10,6 @@ $.Ego = function() {
   $.Actor.call(this, 50, 150, 'rgb(197,179,88)', 0.95, 5);
   this.sprite.classList.add('ego');
   this.setDirection($.Sprite.OUT);
-  this.power = 0;
-  this.rocks = 0;
 };
 
 $.Ego.prototype = Object.create($.Actor.prototype);
@@ -36,33 +34,40 @@ $.Ego.prototype.update = function() {
   
   if ((this.destX != -1) && (this.destZ != -1)) {
 	  if (this.touching({cx: this.destX, cy: this.cy, z: this.destZ, radius: -this.radius}, 20)) {
-	    if (this.step > 1) {
+	    if (this.step > 1.5) {
 		    this.reset();
 	    } else {
 	      this.destX = this.destZ = -1;
 	      this.heading = null;
+	      this.cell = 0;
 	    }
     } else {
       this.heading = Math.atan2(this.destZ - $.ego.z, this.destX - $.ego.cx);
+      
+      // Cycle cell
+      this.cell = ((this.cell + 1) % 30);
     }
   }
   
-  // Convert the heading to a direction value.
-  if (Math.abs(this.heading) > 2.356) {
-    direction |= $.Sprite.LEFT;
-  } else if (Math.abs(this.heading) < 0.785) {
-    direction |= $.Sprite.RIGHT;
-  } else if (this.heading > 0) {
-    direction |= $.Sprite.IN;
-  } else {
-    direction |= $.Sprite.OUT;
+  if (this.heading) {
+    // Convert the heading to a direction value.
+    if (Math.abs(this.heading) > 2.356) {
+      direction |= $.Sprite.LEFT;
+    } else if (Math.abs(this.heading) < 0.785) {
+      direction |= $.Sprite.RIGHT;
+    } else if (this.heading > 0) {
+      direction |= $.Sprite.OUT;
+    } else {
+      direction |= $.Sprite.IN;
+    }
   }
   
   // Update Ego's direction to what was calculated above.
   this.setDirection(direction);
   
   // Move Ego based on it's heading.
-  this.move();
+  if (this.heading) this.move();
+  //}
 
   // The hit method sets the bounce flag, and it is cleared here.
   this.bounce = false;

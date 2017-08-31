@@ -123,7 +123,7 @@ $.Util.renderPerson = function(w, h, direction, c) {
   ctx.fill();
   ctx.stroke();
   
-  if (direction == 3) {
+  if (direction == 2) {
     ctx.fillStyle = 'red';
     ctx.beginPath();
     ctx.rect((w / 2) - packWidth, packStart, packWidth * 2, headSize);
@@ -134,8 +134,10 @@ $.Util.renderPerson = function(w, h, direction, c) {
   
   // Legs
   var legLength = h - bodyBottom;
-  var leftFactor = ((0.5 + (c * 0.5)) % 1);
-  var rightFactor = ((leftFactor + 0.5) % 1);
+  var legFactors = [1, 1, 0.5];
+  var leftFactor = legFactors[c];
+  var rightFactor = legFactors[(c + 1) % 3];
+  
   ctx.beginPath();
   ctx.moveTo((w / 2) - shoulderWidth, bodyBottom);
   ctx.lineTo((w / 2) - shoulderWidth, bodyBottom + legLength * leftFactor);
