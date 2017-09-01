@@ -18,9 +18,38 @@ $.Game = {
    */  
   delta: 0,
   
-  items: [  
-    ],
+  /**
+   * Regions have a name, wall type, wall colour, and water colour
+   */
+  regions: [
+    ['Sewers',     1, '#000000', '#000000'],    // Greenish tint, green water, bricks
+    ['Caves',      0, '#000000', '#000000'],    // Grey walls, blue water
+    ['Mines',      0, '#000000', ''],           // Brown walls, no water
+    ['Catacombs',  1, '#000000', ''],           // Grey walls, no water, bricks
+    ['Underworld', 0, '#000000', '#000000'],    // Red tint, lava
+  ],
   
+  /**
+   * Rooms have a region type, name override, left exit, left door, right door, right exit (other types of 
+   * door are handled as props).
+   */
+  rooms: [
+    // Sewers
+    [0, '', 2, 0, 0, 0],  // [1] Entrance room.
+    [0, '', 0, 0, 0, 1],  // [2]
+  ],
+  
+  
+  props: [
+    
+  ],
+  
+  items: [
+    
+  ],
+  
+  
+    
   itemTop: -1,
   
   invCount: 18,
@@ -67,7 +96,7 @@ $.Game = {
     };
     $.screen.onmousemove = function(e) {
       $.Game.xMouse = e.pageX - $.wrap.offsetLeft;
-      $.Game.yMouse = e.pageY - $.wrap.offsetTop;
+      $.Game.yMouse = e.pageY - $.wrap.offsetTop - 27;
     };
     
     // Initialise and then start the game loop.
@@ -89,7 +118,7 @@ $.Game = {
     
     // Set the room back to the start, and clear the object map.
     this.objs = [];
-    this.room = [0, 0];
+    this.room = 1;
     
     // Create Ego (the main character) and add it to the screen.
     $.ego = new $.Ego();
@@ -130,7 +159,7 @@ $.Game = {
     
     // If after updating all objects, the room that Ego says it is in is different
     // that what it was previously in, then we trigger entry in to the new room.
-    if (($.ego.room[0] != this.room[0]) || ($.ego.room[1] != this.room[1])) {
+    if ($.ego.room != this.room) {
       this.newRoom();
     }
   },

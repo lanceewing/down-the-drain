@@ -99,6 +99,9 @@ $.Ego.prototype.hitEdge = function(edge) {
   if (edge) {
     // Ego is attempting to exit the room. Check if this is okay and enter the new room 
     // if it is okay.
-    $.Game.hitEdge(this, edge);
+    //$.Game.hitEdge(this, edge);
+    this.destX = this.destZ = -1;
+    this.heading = null;
+    this.cell = 0;
   }
 };

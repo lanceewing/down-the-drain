@@ -14,6 +14,12 @@ body {
 span {
   display: inline-block;
 }
+#status {
+	background-color: #fff;
+	color: #000;
+	font-weight: bold;
+	height: 27px;
+}
 #sentence {
   width: 960px;
   height: 33px;
