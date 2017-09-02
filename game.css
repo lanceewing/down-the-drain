@@ -15,7 +15,7 @@ span {
   display: inline-block;
 }
 .drain {
-  background-image: linear-gradient(90deg, rgb(171, 235, 255) 45%, rgba(154, 141, 141, 0.3) 65%);
+  background-image: linear-gradient(90deg, rgb(191, 234, 249) 45%, rgba(154, 141, 141, 0.3) 65%);
   background-size: 19px 50px;
   border-top-left-radius: 90px;
   border-top-right-radius: 90px;
@@ -24,6 +24,20 @@ span {
   z-index: 15;
   top: 20px;;
   box-shadow: rgba(234, 234, 231, 0.5) 0px 0px 120px 35px, rgb(123, 106, 106) 0px 0px 4px 4px;
+}
+.door {
+  background-image: linear-gradient(#000, #333);
+  border-top-left-radius: 90px;
+  border-top-right-radius: 90px;
+  height: 169px;
+  width: 100px;
+  z-index: 15;
+  top: 93px;
+  box-shadow: #333 0px 0px 4px 4px;
+}
+.entry {
+	background-image: none;
+  background-color: rgb(191, 234, 249);
 }
 #status {
 	background-color: #fff;
@@ -100,7 +114,7 @@ span {
   background-color: #000;
   margin: auto;
   width: 960px;
-  height: 600px;
+  height: 627px;
   position: absolute;
   top: 0;
   left: 0;
@@ -150,10 +164,10 @@ span {
     linear-gradient(#444444 33%, rgba(255,255,255,0) 0) 0 0,
     linear-gradient(#222222 30%, rgba(255,255,255,0) 0) 0 30px,
     radial-gradient(circle closest-side, #222222 55%, rgba(255,255,255,0) 0) 0 0,
-    radial-gradient(circle closest-side, #222222 55%, rgba(255,255,255,0) 0) 55px 0 rgb(108,141,36);
+    radial-gradient(circle closest-side, #222222 55%, rgba(255,255,255,0) 0) 55px 0 rgba(255,255,255,0);
   background-size:110px 100px;
   background-repeat:repeat-x;
-
+      background-color: rgb(108,141,36);
   width: 960px;
   height: 100px;
   bottom: 0px;
@@ -164,9 +178,29 @@ span {
   height: 262px;
   z-index: 0;
 }
+#sides {
+	top: 0px;
+	left: -50px;
+	height: 430px;
+  width: 1060px;
+	border-top-right-radius: 60px;
+	border-top-left-radius: 60px;
+	z-index: 700;
+}
+.left {
+	 box-shadow: #000 85px 0 0px 0px inset;
+}
+.right {
+	 box-shadow: #000 -85px 0 0px 0px inset;
+}
+.left.right {
+	 box-shadow: #000 -85px 0 0px 0px inset, #000 85px 0 0px 0px inset;
+}
 #light {
   top: 0px;
-  height: 262px;
+  height: 430px; /*335px;*/
   width: 960px;
-  z-index: 10;
+  z-index: 710;
+  /* Example */
+  background-color: rgba(108,141,36,0.06);
 }
