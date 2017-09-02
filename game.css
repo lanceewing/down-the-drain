@@ -159,19 +159,44 @@ span {
   background-size: 58px 58px;	
   background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
 }
+@keyframes movewater {
+  0% {
+    left: -110px;
+    bottom: -10px;
+  }
+  50% {
+    left: -55px;
+    bottom: 0px;
+  }
+  100% {
+    left: 0px;
+    bottom: -10px;
+  }
+}
+#edge {
+	width: 960px;
+	height: 30px;
+	background-color: #444;
+	bottom: 60px;
+	z-index: 1;
+	box-shadow: #111 0px 10px 25px 0px;
+}
 #water {
   background: 
-    linear-gradient(#444444 33%, rgba(255,255,255,0) 0) 0 0,
-    linear-gradient(#222222 30%, rgba(255,255,255,0) 0) 0 30px,
-    radial-gradient(circle closest-side, #222222 55%, rgba(255,255,255,0) 0) 0 0,
-    radial-gradient(circle closest-side, #222222 55%, rgba(255,255,255,0) 0) 55px 0 rgba(255,255,255,0);
-  background-size:110px 100px;
+    linear-gradient(#222222 55%, rgba(255,255,255,0) 0) 0 0px,
+    radial-gradient(circle closest-side, #222222 63%, rgba(255,255,255,0) 0) 0 0,
+    radial-gradient(circle closest-side, #222222 60%, rgba(255,255,255,0) 0) 55px 0 rgba(255,255,255,0);
+  background-size:110px 90px;
   background-repeat:repeat-x;
       background-color: rgb(108,141,36);
-  width: 960px;
-  height: 100px;
+  width: 1070px;
+  height: 90px;
   bottom: 0px;
   z-index: 0;
+  animation-duration: 2s;
+  animation-name: movewater;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
 }
 #wall {
   top: 0px;
