@@ -28,8 +28,7 @@ $.Ego.prototype.update = function() {
   
   if ($.Game.mouseButton) {
     $.Game.mouseButton = 0;
-    this.destZ = $.Game.yMouse * 2;
-    this.destX = $.Game.xMouse;
+    this.dests.push({z: $.Game.yMouse * 2, x: $.Game.xMouse});
   }
   
   if ((this.destX != -1) && (this.destZ != -1)) {
@@ -47,6 +46,11 @@ $.Ego.prototype.update = function() {
       // Cycle cell
       this.cell = ((this.cell + 1) % 30);
     }
+  } else if (this.dests.length > 0) {
+    // If there is a destination position waiting for ego to move to, pop it now.
+    var pos = this.dests.pop();
+    this.destZ = pos.z
+    this.destX = pos.x;
   }
   
   if (this.heading) {
@@ -67,7 +71,6 @@ $.Ego.prototype.update = function() {
   
   // Move Ego based on it's heading.
   if (this.heading) this.move();
-  //}
 
   // The hit method sets the bounce flag, and it is cleared here.
   this.bounce = false;

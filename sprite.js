@@ -58,6 +58,7 @@ $.Sprite = function(size, height, colour, texture, xzstep, ystep, g) {
   this.facing = 1;
   this.destZ = -1;
   this.destX = -1;
+  this.dests = [];
   this.cell = 0;
 };
 
