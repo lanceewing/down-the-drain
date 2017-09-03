@@ -68,6 +68,7 @@ $.Game = {
     $.water = document.getElementById('water');
     $.region = document.getElementById('region');
     $.doors = document.getElementsByClassName('door');
+    $.drains = document.getElementsByClassName('drain');
     $.time = document.getElementById('time');
     $.score = document.getElementById('score');
     $.items = document.getElementById('itemlist');
@@ -229,6 +230,13 @@ $.Game = {
   newRoom: function() {
     var roomData = this.rooms[this.room - 1];
     this.region = this.regions[roomData[0]];
+    
+    // Room 1 has an open drain for entry and exit.
+    if (this.room == 1) {
+      $.drains[2].classList.add('entry');
+    } else {
+      $.drains[2].classList.remove('entry');
+    }
     
     // Update the region name.
     $.region.innerHTML = 'In the ' + this.region[0];
