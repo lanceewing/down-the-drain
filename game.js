@@ -22,7 +22,7 @@ $.Game = {
    * Regions have a name, wall type, wall colour, and water colour
    */
   regions: [
-    ['Sewers',     1, '#000000', '#000000'],    // Greenish tint, green water, bricks
+    ['Sewers',     1, '108,141,36', '108,141,36'],    // Greenish tint, green water, bricks
     ['Caves',      0, '#000000', '#000000'],    // Grey walls, blue water
     ['Mines',      0, '#000000', ''],           // Brown walls, no water
     ['Catacombs',  1, '#000000', ''],           // Grey walls, no water, bricks
@@ -35,8 +35,8 @@ $.Game = {
    */
   rooms: [
     // Sewers
-    [0, '', 2, 0, 0, 0],  // [1] Entrance room.
-    [0, '', 0, 0, 0, 1],  // [2]
+    [0, '', , [2, 3], ,       ],  // [1] Entrance room.
+    [0, '', ,       , , [1, 1]],  // [2]
   ],
   
   
@@ -64,15 +64,18 @@ $.Game = {
     $.shadow = document.getElementById('shadow');
     $.wall = document.getElementById('wall');
     $.bricks = document.getElementById('bricks');
+    $.sides = document.getElementById('sides');
+    $.water = document.getElementById('water');
+    $.region = document.getElementById('region');
+    $.doors = document.getElementsByClassName('door');
+    $.time = document.getElementById('time');
+    $.score = document.getElementById('score');
     $.items = document.getElementById('itemlist');
     
-    // Render the favicon and grass.
+    // Render the wall texture.
     this.wall = this.renderWall();
     this.wallCtx = $.wall.getContext('2d');
     this.wallCtx.drawImage(this.wall, 0, 0);
-    
-    // Render sky immediately after the grass is drawn so they appear at the same time.
-    $.bricks.classList.add('bricks');
     
     // Register click event listeners for item list arrow buttons.
     document.getElementById("up").addEventListener("click", function(){
@@ -224,7 +227,32 @@ $.Game = {
    * Invoked when Ego is entering a room.  
    */
   newRoom: function() {
-
+    var roomData = this.rooms[this.room - 1];
+    this.region = this.regions[roomData[0]];
+    
+    // Update the region name.
+    $.region.innerHTML = 'In the ' + this.region[0];
+    
+    // Draw the bricks if the region has them.
+    if (this.region[1]) $.bricks.classList.add('bricks');
+    
+    // Room colouring
+    $.wall.style.backgroundColor = 'rgb(' + this.region[2] + ')';
+    $.water.style.backgroundColor = 'rgb(' + this.region[3] + ')';
+    
+    // Sides
+    $.sides.className = "";
+    if (!roomData[2]) {
+      $.sides.classList.add('left');
+    }
+    if (!roomData[5]) {
+      $.sides.classList.add('right');
+    }
+    
+    // Doors (display none, display block)
+    $.doors[0].style.display = (roomData[3]? 'block' : 'none');
+    $.doors[1].style.display = (roomData[4]? 'block' : 'none');
+    
   },
   
   scrollInv: function(dir) {
@@ -255,6 +283,7 @@ $.Game = {
         imgData.data[i]=Math.floor(imgData.data[i] * texture);
         imgData.data[i+1]=Math.floor(imgData.data[i+1] * texture);
         imgData.data[i+2]=Math.floor(imgData.data[i+2] * texture);
+        imgData.data[i+3]=210;
       } else {
         texture = 0.5 + texture;
         imgData.data[i]=Math.floor(imgData.data[i] / texture);
