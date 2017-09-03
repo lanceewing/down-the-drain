@@ -260,7 +260,7 @@ $.Sprite.prototype.move = function() {
       if (x < -(this.size)) edge = [-1, 0];
       if (x > 960) edge = [1, 0];
       if (z < 530) edge = [0, -1];
-      if (z > 647) edge = [0, 1];
+      if (z > 667) edge = [0, 1];
       
       // Increment the step size the step increment, capping at the max step.
       if ((this.step += this.stepInc) > this.maxStep) this.step = this.maxStep;
