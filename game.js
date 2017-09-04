@@ -4,10 +4,6 @@
  */
 $.Game = {
 
-  xMouse: 0,
-  yMouse: 0,
-  mouseButton: 0,	
-
   /**
    * The time of the last animation frame. 
    */ 
@@ -59,7 +55,7 @@ $.Game = {
    */
   start: function() {
     // Get a reference to each of the elements in the DOM that we'll need to update.
-	$.wrap = document.getElementById('wrap');
+	  $.wrap = document.getElementById('wrap');
     $.screen = document.getElementById('screen');
     $.shadow = document.getElementById('shadow');
     $.wall = document.getElementById('wall');
@@ -88,20 +84,31 @@ $.Game = {
     
     // Register click event listeners for the item list.
     
+    $.doors[0].addEventListener("click", function(e) {
+      $.ego.stop();
+
+      var door = e.target;
+      
+      // Walk to be in front of the door
+      $.ego.moveTo(door.offsetLeft + (door.offsetWidth / 2), $.ego.z);
+      
+      $.ego.moveTo(door.offsetLeft + (door.offsetWidth / 2), door.offsetTop);
+      
+      // We don't want the normal screen onclick to be fire.
+      e.stopPropagation();
+    });
     
-    // Set up the keyboard & mouse event handlers (size reduced way)
-    $.screen.onmousedown = function(e) {
-      if (e.button === 0) $.Game.mouseButton = 1;
-      e.preventDefault();
+    $.screen.onclick = function(e) {
+      $.ego.stop(true);
+      $.ego.moveTo(e.pageX - $.wrap.offsetLeft, (e.pageY - $.wrap.offsetTop - 27) * 2);
     };
-    $.screen.onmouseup = function(e) {
-      if (e.button === 0) $.Game.mouseButton = 0;
-      e.preventDefault();
-    };
-    $.screen.onmousemove = function(e) {
-      $.Game.xMouse = e.pageX - $.wrap.offsetLeft;
-      $.Game.yMouse = e.pageY - $.wrap.offsetTop - 27;
-    };
+    
+    // TODO: Do we need this? Allows any part of the code to inspect the current mouse position in real time.
+    //$.screen.onmousemove = function(e) {
+    //  // The offset values are relative to the top left of the page, so we use pageX and pageY.
+    //  $.Game.xMouse = e.pageX - $.wrap.offsetLeft;
+    //  $.Game.yMouse = e.pageY - $.wrap.offsetTop - 27;
+    //};
     
     // Initialise and then start the game loop.
     $.Game.init();

@@ -52,6 +52,7 @@ $.Sprite = function(size, height, colour, texture, xzstep, ystep, g) {
   this.g = g;
   this.direction = 0;
   this.directionLast = 1;
+  this.heading = null;
   this.maxY = 200;
   this.backgroundX = 0;
   this.backgroundY = 0;
@@ -333,18 +334,6 @@ $.Sprite.prototype.update = function() {
   if (!this.moved) {
     this.move();
   }
-};
-
-/**
- * Removes the Sprite from the game. This not only removes it from the current room, but also
- * completely from the game. There shouldn't be any references left to the Sprite anywhere.
- */
-$.Sprite.prototype.stop = function() {
-  // Removes it from the screen.
-  this.remove();
-
-  // Removes it from the World map, which effectively means the game.
-  $.Game.remove(this);
 };
 
 /**

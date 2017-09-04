@@ -26,19 +26,12 @@ $.Ego.prototype.update = function() {
   // Mask out left/right/in/out but retain the current jumping directions.
   var direction = (this.direction & $.Sprite.UP_DOWN);
   
-  if ($.Game.mouseButton) {
-    $.Game.mouseButton = 0;
-    this.dests.push({z: $.Game.yMouse * 2, x: $.Game.xMouse});
-  }
-  
   if ((this.destX != -1) && (this.destZ != -1)) {
 	  if (this.touching({cx: this.destX, cy: this.cy, z: this.destZ, radius: -this.radius}, 20)) {
 	    if (this.step > 1.5) {
 		    this.reset();
 	    } else {
-	      this.destX = this.destZ = -1;
-	      this.heading = null;
-	      this.cell = 0;
+	      this.stop();
 	    }
     } else {
       this.heading = Math.atan2(this.destZ - $.ego.z, this.destX - $.ego.cx);
@@ -48,12 +41,12 @@ $.Ego.prototype.update = function() {
     }
   } else if (this.dests.length > 0) {
     // If there is a destination position waiting for ego to move to, pop it now.
-    var pos = this.dests.pop();
+    var pos = this.dests.shift();
     this.destZ = pos.z
     this.destX = pos.x;
   }
   
-  if (this.heading) {
+  if (this.heading !== null) {
     // Convert the heading to a direction value.
     if (Math.abs(this.heading) > 2.356) {
       direction |= $.Sprite.LEFT;
@@ -70,7 +63,7 @@ $.Ego.prototype.update = function() {
   this.setDirection(direction);
   
   // Move Ego based on it's heading.
-  if (this.heading) this.move();
+  if (this.heading !== null) this.move();
 
   // The hit method sets the bounce flag, and it is cleared here.
   this.bounce = false;

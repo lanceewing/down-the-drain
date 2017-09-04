@@ -32,3 +32,17 @@ $.Actor.prototype.buildCanvas = function() {
   
   return ctx.canvas;
 };
+
+$.Actor.prototype.stop = function(fully) {
+  // Clear the current destination.
+  this.destX = this.destZ = -1;
+  this.heading = null;
+  this.cell = 0;
+  
+  // To fully stop, we need to also clear the pending destinations.
+  if (fully) this.dests = [];
+};
+
+$.Actor.prototype.moveTo = function(x, z) {
+  this.dests.push({z: z, x: x});
+};

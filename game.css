@@ -209,6 +209,7 @@ span {
 	border-top-right-radius: 60px;
 	border-top-left-radius: 60px;
 	z-index: 720;
+	pointer-events: none;
 }
 .left {
 	 box-shadow: #000 85px 0 0px 0px inset;
