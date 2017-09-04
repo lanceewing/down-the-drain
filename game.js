@@ -99,8 +99,14 @@ $.Game = {
     });
     
     $.screen.onclick = function(e) {
+      // Fully stop (includes clearing queued destination points)
       $.ego.stop(true);
-      $.ego.moveTo(e.pageX - $.wrap.offsetLeft, (e.pageY - $.wrap.offsetTop - 27) * 2);
+      
+      var z = (e.pageY - $.wrap.offsetTop - 27) * 2;
+      
+      if (z > 530) {
+        $.ego.moveTo(e.pageX - $.wrap.offsetLeft, (e.pageY - $.wrap.offsetTop - 27) * 2);
+      }
     };
     
     // TODO: Do we need this? Allows any part of the code to inspect the current mouse position in real time.
