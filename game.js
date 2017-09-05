@@ -177,7 +177,10 @@ $.Game = {
     // If after updating all objects, the room that Ego says it is in is different
     // that what it was previously in, then we trigger entry in to the new room.
     if ($.ego.room != this.room) {
-      this.newRoom();
+      this.fadeOut($.screen);
+      setTimeout(function() {
+        $.Game.newRoom();
+      }, 200);
     }
   },
   
@@ -276,9 +279,9 @@ $.Game = {
     $.doors[0].style.display = (roomData[2]? 'block' : 'none');
     $.doors[1].style.display = (roomData[3]? 'block' : 'none');
     
-    //this.userInput = true;
-    
     $.ego.show();
+    
+    $.Game.fadeIn($.screen);
   },
   
   scrollInv: function(dir) {
@@ -319,6 +322,33 @@ $.Game = {
     }
     ctx.putImageData(imgData,0,0);
     return ctx.canvas;
+  },
+  
+  /**
+   * Fades in the given DOM Element.
+   * 
+   * @param {Object} elem The DOM Element to fade in.
+   */
+  fadeIn: function(elem) {
+    // Remove any previous transition.
+    elem.removeAttribute('style');
+
+    // We need to change the opacity in a setTimeout to give the display change time to take effect first.
+    //setTimeout(function() {
+      // Setting the transition inline so that we can cancel it with the removeAttribute.
+      elem.style.transition = 'opacity 0.2s';
+      elem.style.opacity = 1.0;
+    //}, 100);
+  },
+  
+  /**
+   * Fades out the given DOM Element.
+   * 
+   * @param {Object} elem The DOM Element to fade out.
+   */
+  fadeOut: function(elem) {
+    elem.style.transition = 'opacity 0.2s';
+    elem.style.opacity = 0.0;
   }
 };
 

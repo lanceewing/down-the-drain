@@ -119,7 +119,7 @@ $.Ego.prototype.hitEdge = function(edge) {
           case 3: // From the right door
             break;
           case 4: // From the right edge of screen
-            this.setPosition(960 - this.size, this.y, 600);
+            this.setPosition(960 + this.size, this.y, 600);
             this.setDirection($.Sprite.LEFT);
             this.moveTo(960 - this.size - 50, 600, function() {
               $.Game.userInput = true;
