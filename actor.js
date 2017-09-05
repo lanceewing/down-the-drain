@@ -39,10 +39,15 @@ $.Actor.prototype.stop = function(fully) {
   this.heading = null;
   this.cell = 0;
   
+  if (this.destFn) {
+    this.destFn();
+    this.destFn = null;
+  }
+  
   // To fully stop, we need to also clear the pending destinations.
   if (fully) this.dests = [];
 };
 
-$.Actor.prototype.moveTo = function(x, z) {
-  this.dests.push({z: z, x: x});
+$.Actor.prototype.moveTo = function(x, z, fn) {
+  this.dests.push({z: z, x: x, fn: fn});
 };

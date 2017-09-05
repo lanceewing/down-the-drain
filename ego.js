@@ -31,6 +31,7 @@ $.Ego.prototype.update = function() {
 	    if (this.step > 1.5) {
 		    this.reset();
 	    } else {
+	      // We've reached the destination.
 	      this.stop();
 	    }
     } else {
@@ -44,6 +45,7 @@ $.Ego.prototype.update = function() {
     var pos = this.dests.shift();
     this.destZ = pos.z
     this.destX = pos.x;
+    this.destFn = pos.fn;
   }
   
   if (this.heading !== null) {
@@ -93,11 +95,40 @@ $.Ego.prototype.hit = function(obj) {
  */
 $.Ego.prototype.hitEdge = function(edge) {
   if (edge) {
-    // Ego is attempting to exit the room. Check if this is okay and enter the new room 
-    // if it is okay.
-    //$.Game.hitEdge(this, edge);
+    // Stop moving.
     this.destX = this.destZ = -1;
     this.heading = null;
     this.cell = 0;
+    
+    // Now check if there is a room on this edge.
+    if (edge < 5) {
+      var edgeData = $.Game.rooms[this.room - 1][edge];
+      if (edgeData) {
+        // Hide ego before we reposition him to the new entry point.
+        this.hide();
+        
+        // Set the new room for ego.
+        this.room = edgeData[0];
+        
+        // Work out the new position for ego.
+        switch (edgeData[1]) {
+          case 1: // From the left edge of screen
+            break;
+          case 2: // From the left door
+            break;
+          case 3: // From the right door
+            break;
+          case 4: // From the right edge of screen
+            this.setPosition(960 - this.size, this.y, 600);
+            this.setDirection($.Sprite.LEFT);
+            this.moveTo(960 - this.size - 50, 600, function() {
+              $.Game.userInput = true;
+            });
+            break;
+        }
+        
+        this.hide();
+      }
+    }
   }
 };

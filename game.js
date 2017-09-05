@@ -15,6 +15,11 @@ $.Game = {
   delta: 0,
   
   /**
+   * 
+   */
+  userInput: true,
+  
+  /**
    * Regions have a name, wall type, wall colour, and water colour
    */
   regions: [
@@ -26,13 +31,13 @@ $.Game = {
   ],
   
   /**
-   * Rooms have a region type, name override, left exit, left door, right door, right exit (other types of 
-   * door are handled as props).
+   * Rooms have a region type, left exit, left door, right door, right exit (other types of 
+   * door are handled as props), name override.
    */
   rooms: [
     // Sewers
-    [0, '', , [2, 3], ,       ],  // [1] Entrance room.
-    [0, '', ,       , , [1, 1]],  // [2]
+    [0, , [2, 4], ,       , ''],  // [1] Entrance room.
+    [0, ,       , , [1, 2], ''],  // [2]
   ],
   
   
@@ -86,7 +91,7 @@ $.Game = {
     
     $.doors[0].addEventListener("click", function(e) {
       $.ego.stop();
-
+      
       var door = e.target;
       
       // Walk to be in front of the door
@@ -99,22 +104,17 @@ $.Game = {
     });
     
     $.screen.onclick = function(e) {
-      // Fully stop (includes clearing queued destination points)
-      $.ego.stop(true);
-      
-      var z = (e.pageY - $.wrap.offsetTop - 27) * 2;
-      
-      if (z > 530) {
-        $.ego.moveTo(e.pageX - $.wrap.offsetLeft, (e.pageY - $.wrap.offsetTop - 27) * 2);
+      if ($.Game.userInput) {
+        // Fully stop (includes clearing queued destination points)
+        $.ego.stop(true);
+        
+        var z = (e.pageY - $.wrap.offsetTop - 27) * 2;
+        
+        if (z > 530) {
+          $.ego.moveTo(e.pageX - $.wrap.offsetLeft, (e.pageY - $.wrap.offsetTop - 27) * 2);
+        }
       }
     };
-    
-    // TODO: Do we need this? Allows any part of the code to inspect the current mouse position in real time.
-    //$.screen.onmousemove = function(e) {
-    //  // The offset values are relative to the top left of the page, so we use pageX and pageY.
-    //  $.Game.xMouse = e.pageX - $.wrap.offsetLeft;
-    //  $.Game.yMouse = e.pageY - $.wrap.offsetTop - 27;
-    //};
     
     // Initialise and then start the game loop.
     $.Game.init();
@@ -241,6 +241,8 @@ $.Game = {
    * Invoked when Ego is entering a room.  
    */
   newRoom: function() {
+    this.room = $.ego.room;
+    
     var roomData = this.rooms[this.room - 1];
     this.region = this.regions[roomData[0]];
     
@@ -263,17 +265,20 @@ $.Game = {
     
     // Sides
     $.sides.className = "";
-    if (!roomData[2]) {
+    if (!roomData[1]) {
       $.sides.classList.add('left');
     }
-    if (!roomData[5]) {
+    if (!roomData[4]) {
       $.sides.classList.add('right');
     }
     
     // Doors (display none, display block)
-    $.doors[0].style.display = (roomData[3]? 'block' : 'none');
-    $.doors[1].style.display = (roomData[4]? 'block' : 'none');
+    $.doors[0].style.display = (roomData[2]? 'block' : 'none');
+    $.doors[1].style.display = (roomData[3]? 'block' : 'none');
     
+    //this.userInput = true;
+    
+    $.ego.show();
   },
   
   scrollInv: function(dir) {

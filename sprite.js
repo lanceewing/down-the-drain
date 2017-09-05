@@ -30,8 +30,6 @@ $.Sprite = function(size, height, colour, texture, xzstep, ystep, g) {
   this.shadow = $.Util.renderShadow(this.size);
   this.sprite = document.createElement('span');
   this.sprite.classList.add('sprite');
-  this.surfaceShadow = document.createElement('span');
-  this.sprite.appendChild(this.surfaceShadow);
   
   var style = this.sprite.style;
   style.width = (this.size + 'px');
@@ -59,8 +57,10 @@ $.Sprite = function(size, height, colour, texture, xzstep, ystep, g) {
   this.facing = 1;
   this.destZ = -1;
   this.destX = -1;
+  this.destFn = null;
   this.dests = [];
   this.cell = 0;
+  this.fixedPriority = false;
 };
 
 /**
@@ -85,6 +85,16 @@ $.Sprite.prototype.add = function() {
 $.Sprite.prototype.remove = function() {
   $.screen.removeChild(this.sprite);
   $.shadow.removeChild(this.shadow);
+};
+
+$.Sprite.prototype.hide = function() {
+  this.sprite.style.opacity = 0;
+  this.shadow.style.opacity = 0;
+};
+
+$.Sprite.prototype.show = function() {
+  this.sprite.style.opacity = 1.0;
+  this.shadow.style.opacity = 1.0;
 };
 
 /**
@@ -257,11 +267,26 @@ $.Sprite.prototype.move = function() {
       x += Math.cos(this.heading) * Math.round(this.step * $.Game.stepFactor);
       z += Math.sin(this.heading) * Math.round(this.step * $.Game.stepFactor);
       
-      // Check whether a room edge has been hit.
-      if (x < -(this.size)) edge = [-1, 0];
-      if (x > 960) edge = [1, 0];
-      if (z < 530) edge = [0, -1];
-      if (z > 667) edge = [0, 1];
+      if ($.Game.userInput) {
+        // Check whether a room edge has been hit.
+        if (x < 0) edge = 1;
+        if ((x + this.size) > 960) edge = 4;
+        // This edge number is simply to stop ego. He won't leave the room.
+        if (z > 667) edge = 5;
+      }
+      
+      // Check whether ego has gone through a door.
+      if (z < 530) {
+        // We stop user input and allow the user to walk a bit further.
+        $.Game.userInput = false;
+        // Fading effect as ego leaves through the door.
+        this.sprite.style.opacity = 1.0 - ((530 - z) / 100);
+      }
+      if (z < 500) {
+        // Ego has now reached the horizon, so time for a room change. The x value
+        // tells us which door it was.
+        edge = (x < 480? 2 : 3);
+      }
       
       // Increment the step size the step increment, capping at the max step.
       if ((this.step += this.stepInc) > this.maxStep) this.step = this.maxStep;

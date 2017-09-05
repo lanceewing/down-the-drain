@@ -136,7 +136,7 @@ span {
   bottom: 0px;
   width: 960px;
   height: 215px;
-  z-index: 1;
+  z-index: 16;
 }
 .shadow {
   background-color: black;
@@ -161,15 +161,17 @@ span {
 @keyframes movewater {
   0% {
     left: -110px;
-    bottom: -10px;
+    /*bottom: -10px;*/
   }
+  /*
   50% {
     left: -55px;
     bottom: 0px;
   }
+  */
   100% {
     left: 0px;
-    bottom: -10px;
+    /*bottom: -10px;*/
   }
 }
 #edge {
