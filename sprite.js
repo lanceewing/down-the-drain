@@ -88,13 +88,14 @@ $.Sprite.prototype.remove = function() {
 };
 
 $.Sprite.prototype.hide = function() {
-  this.sprite.style.opacity = 0;
-  this.shadow.style.opacity = 0;
+  this.sprite.style.display = 'none';
+  this.shadow.style.display = 'none';
+  this.sprite.style.opacity = 1.0;
 };
 
 $.Sprite.prototype.show = function() {
-  this.sprite.style.opacity = 1.0;
-  this.shadow.style.opacity = 1.0;
+  this.sprite.style.display = 'block';
+  this.shadow.style.display = 'block';
 };
 
 /**

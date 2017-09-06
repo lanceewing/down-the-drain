@@ -114,10 +114,18 @@ $.Ego.prototype.hitEdge = function(edge) {
         switch (edgeData[1]) {
           case 1: // From the left edge of screen
             break;
+            
           case 2: // From the left door
+            this.setPosition(268, this.y, 500);
+            this.setDirection($.Sprite.OUT);
+            this.moveTo(293, 600, function() {
+              $.Game.userInput = true;
+            });
             break;
+            
           case 3: // From the right door
             break;
+            
           case 4: // From the right edge of screen
             this.setPosition(960 + this.size, this.y, 600);
             this.setDirection($.Sprite.LEFT);
@@ -126,8 +134,6 @@ $.Ego.prototype.hitEdge = function(edge) {
             });
             break;
         }
-        
-        this.hide();
       }
     }
   }

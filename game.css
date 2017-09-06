@@ -121,6 +121,7 @@ span {
   bottom: 0;
   right: 0;
   cursor: crosshair;
+  opacity: 0;
 }
 #screen {
   position: relative;

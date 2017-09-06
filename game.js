@@ -144,6 +144,9 @@ $.Game = {
     
     // Enter the starting room.
     this.newRoom();
+    
+    // Fade in the whole screen at the start.
+    this.fadeIn($.wrap);
   },
   
   /**
@@ -177,6 +180,7 @@ $.Game = {
     // If after updating all objects, the room that Ego says it is in is different
     // that what it was previously in, then we trigger entry in to the new room.
     if ($.ego.room != this.room) {
+      this.room = $.ego.room;
       this.fadeOut($.screen);
       setTimeout(function() {
         $.Game.newRoom();
@@ -244,8 +248,6 @@ $.Game = {
    * Invoked when Ego is entering a room.  
    */
   newRoom: function() {
-    this.room = $.ego.room;
-    
     var roomData = this.rooms[this.room - 1];
     this.region = this.regions[roomData[0]];
     
@@ -279,9 +281,8 @@ $.Game = {
     $.doors[0].style.display = (roomData[2]? 'block' : 'none');
     $.doors[1].style.display = (roomData[3]? 'block' : 'none');
     
-    $.ego.show();
-    
     $.Game.fadeIn($.screen);
+    $.ego.show();
   },
   
   scrollInv: function(dir) {
