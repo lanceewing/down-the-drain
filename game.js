@@ -36,8 +36,8 @@ $.Game = {
    */
   rooms: [
     // Sewers
-    [0, , [2, 4], ,       , ''],  // [1] Entrance room.
-    [0, ,       , , [1, 2], ''],  // [2]
+    [0, , [2, 4], ,             , ''],  // [1] Entrance room.
+    [0, ,       , [3, 1], [1, 2], ''],  // [2]
   ],
   
   
@@ -88,20 +88,21 @@ $.Game = {
     });
     
     // Register click event listeners for the item list.
-    
-    $.doors[0].addEventListener("click", function(e) {
-      $.ego.stop();
-      
-      var door = e.target;
-      
-      // Walk to be in front of the door
-      $.ego.moveTo(door.offsetLeft + (door.offsetWidth / 2), $.ego.z);
-      
-      $.ego.moveTo(door.offsetLeft + (door.offsetWidth / 2), door.offsetTop);
-      
-      // We don't want the normal screen onclick to be fire.
-      e.stopPropagation();
-    });
+    for (var i=0; i<2; i++) {
+      $.doors[i].addEventListener("click", function(e) {
+        $.ego.stop();
+        
+        var door = e.target;
+        
+        // Walk to be in front of the door
+        $.ego.moveTo(door.offsetLeft + (door.offsetWidth / 2), $.ego.z);
+        
+        $.ego.moveTo(door.offsetLeft + (door.offsetWidth / 2), door.offsetTop);
+        
+        // We don't want the normal screen onclick to be fire.
+        e.stopPropagation();
+      });
+    }
     
     $.screen.onclick = function(e) {
       if ($.Game.userInput) {
