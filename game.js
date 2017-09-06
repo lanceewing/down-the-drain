@@ -49,8 +49,12 @@ $.Game = {
     
   ],
   
+  verb: 'Walk to',
   
-    
+  command: '',   // Current constructed command, either full or partial
+  
+  thing: '',
+  
   itemTop: -1,
   
   invCount: 18,
@@ -179,7 +183,7 @@ $.Game = {
     this.updateObjects();
     
     // If after updating all objects, the room that Ego says it is in is different
-    // that what it was previously in, then we trigger entry in to the new room.
+    // than what it was previously in, then we trigger entry in to the new room.
     if ($.ego.room != this.room) {
       this.room = $.ego.room;
       this.fadeOut($.screen);
@@ -281,6 +285,18 @@ $.Game = {
     // Doors (display none, display block)
     $.doors[0].style.display = (roomData[2]? 'block' : 'none');
     $.doors[1].style.display = (roomData[3]? 'block' : 'none');
+    
+    // Add event listeners.
+    var screenObjs = $.screen.children;
+    for (var i=0; i<screenObjs.length; i++) {
+      screenObjs[i].addEventListener("mouseenter", function(e) {
+        if (e.target.id) {
+          console.log("" + e.target.id);
+        } else {
+          console.log("" + e.target.classList[0]);
+        }
+      });
+    }
     
     $.Game.fadeIn($.screen);
     $.ego.show();

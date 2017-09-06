@@ -138,6 +138,7 @@ span {
   width: 960px;
   height: 215px;
   z-index: 16;
+  pointer-events: none;
 }
 .shadow {
   background-color: black;
