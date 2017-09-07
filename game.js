@@ -183,6 +183,8 @@ $.Game = {
     // Enter the starting room.
     this.newRoom();
     
+    this.say('Hello!!');
+    
     // Fade in the whole screen at the start.
     this.fadeIn($.wrap);
   },
@@ -335,6 +337,13 @@ $.Game = {
     
     $.Game.fadeIn($.screen);
     $.ego.show();
+  },
+  
+  say: function(text) {
+    var bubble = document.createElement('span');
+    bubble.className = 'speech';
+    bubble.innerHTML = text;
+    $.ego.sprite.appendChild(bubble);
   },
   
   getItem: function(name) {

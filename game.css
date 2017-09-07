@@ -224,3 +224,24 @@ span {
 .left.right {
 	 box-shadow: #000 -85px 0 0px 0px inset, #000 85px 0 0px 0px inset;
 }
+.speech {
+	font-size: smaller;
+  padding: 15px;
+  color: #fff;
+  background: #AD9E7B;
+  border-radius: 10px;
+  left: -40px;
+  bottom: 177px;
+  width: 200px;
+}
+.speech:after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: -15px;
+  left: 50px;
+  width: 0;
+  border-width: 15px 15px 0;
+  border-style: solid;
+  border-color: #AD9E7B transparent;
+}
