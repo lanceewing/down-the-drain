@@ -35,7 +35,7 @@ span {
   top: 93px;
   box-shadow: #333 0px 0px 4px 4px;
 }
-.entry {
+.open {
 	background-image: none;
   background-color: rgb(191, 234, 249);
 }

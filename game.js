@@ -42,11 +42,28 @@ $.Game = {
   
   
   props: [
-    
+    'fishing pole',
+    'eel flashlight',
+    'poisoned rat',
+    'poisoned cheese',
+    'wine bottle',
+    'empty bottle',
+    'old batteries',
+    'chocolate coins',
+    'vinyl tape',
+    'pipe',
+    'lighter',
+    'book',
+    'suit of armour',
+    'worm',
+    'nylon string',
+    'hammer',
+    'nails',
+    'mop'
   ],
   
   items: [
-    
+
   ],
   
   verb: 'Walk to',
@@ -56,8 +73,6 @@ $.Game = {
   thing: '',
   
   itemTop: -1,
-  
-  invCount: 18,
     
   /**
    * Starts the game. 
@@ -160,6 +175,10 @@ $.Game = {
     $.ego = new $.Ego();
     $.ego.add();
     $.ego.setPosition(550, 0, 600);
+    
+    // Starting inventory.
+    this.getItem('chocolate coins');
+    this.getItem('book');
     
     // Enter the starting room.
     this.newRoom();
@@ -275,9 +294,9 @@ $.Game = {
     
     // Room 1 has an open drain for entry and exit.
     if (this.room == 1) {
-      $.drains[2].classList.add('entry');
+      $.drains[2].className = 'open drain'; //classList.add('entry');
     } else {
-      $.drains[2].classList.remove('entry');
+      $.drains[2].className = 'drain'; //classList.remove('entry');
     }
     
     // Update the region name.
@@ -307,7 +326,7 @@ $.Game = {
     var screenObjs = $.screen.children;
     for (var i=0; i<screenObjs.length; i++) {
       screenObjs[i].addEventListener("mouseenter", function(e) {
-        $.Game.thing = (e.target.id? e.target.id : e.target.classList[0]);
+        $.Game.thing = (e.target.id? e.target.id : e.target.className); //classList[0]);
       });
       screenObjs[i].addEventListener("mouseleave", function(e) {
         $.Game.thing = '';
@@ -318,9 +337,24 @@ $.Game = {
     $.ego.show();
   },
   
+  getItem: function(name) {
+    //this.items.push(name);   // TODO: Don't think we need this array. Can manage it with the dom itemlist.
+    var item = document.createElement('span');
+    item.innerHTML = name;
+    $.items.appendChild(item);
+    
+    item.addEventListener("mouseenter", function(e) {
+      $.Game.thing = name;
+    });
+    item.addEventListener("mouseleave", function(e) {
+      $.Game.thing = '';
+    });
+  },
+  
   scrollInv: function(dir) {
     // TODO: Handle mouse button held down and multiple invocations of this function.
     var newTop = this.itemTop + (27 * dir);
+    var invCount = $.items.children.length;
     if ((newTop <= -1) && (newTop > -((this.invCount - 4) * 27))) {
       this.itemTop = newTop;
       $.items.style.top = this.itemTop + 'px';
