@@ -51,7 +51,7 @@ $.Game = {
   
   verb: 'Walk to',
   
-  command: '',   // Current constructed command, either full or partial
+  command: 'Walk to',   // Current constructed command, either full or partial
   
   thing: '',
   
@@ -77,6 +77,7 @@ $.Game = {
     $.time = document.getElementById('time');
     $.score = document.getElementById('score');
     $.items = document.getElementById('itemlist');
+    $.sentence = document.getElementById('sentence');
     
     // Render the wall texture.
     this.wall = this.renderWall();
@@ -90,6 +91,13 @@ $.Game = {
     document.getElementById("down").addEventListener("click", function(){
       $.Game.scrollInv(-1);
     });
+    
+    var verbs = document.getElementById('commands').children;
+    for (var i=0; i<verbs.length; i++) {
+      verbs[i].addEventListener("click", function(e) {
+        $.Game.command = $.Game.verb = e.target.innerHTML;
+      });
+    }
     
     // Register click event listeners for the item list.
     for (var i=0; i<2; i++) {
@@ -105,11 +113,13 @@ $.Game = {
         
         // We don't want the normal screen onclick to be fire.
         e.stopPropagation();
+        
+        $.Game.command = $.Game.verb = 'Walk to';
       });
     }
     
     $.screen.onclick = function(e) {
-      if ($.Game.userInput) {
+      if ($.Game.userInput && ($.Game.verb == 'Walk to')) {
         // Fully stop (includes clearing queued destination points)
         $.ego.stop(true);
         
@@ -117,8 +127,12 @@ $.Game = {
         
         if (z > 530) {
           $.ego.moveTo(e.pageX - $.wrap.offsetLeft, (e.pageY - $.wrap.offsetTop - 27) * 2);
+        } else {
+          $.ego.moveTo(e.pageX - $.wrap.offsetLeft, 600);
         }
       }
+      
+      $.Game.command = $.Game.verb = 'Walk to';
     };
     
     // Initialise and then start the game loop.
@@ -181,6 +195,9 @@ $.Game = {
     // Game has focus and is not paused, so execute normal game loop, which is
     // to update all objects on the screen.
     this.updateObjects();
+    
+    // Update sentence.
+    $.sentence.innerHTML = this.command + ' ' + this.thing;
     
     // If after updating all objects, the room that Ego says it is in is different
     // than what it was previously in, then we trigger entry in to the new room.
@@ -290,11 +307,10 @@ $.Game = {
     var screenObjs = $.screen.children;
     for (var i=0; i<screenObjs.length; i++) {
       screenObjs[i].addEventListener("mouseenter", function(e) {
-        if (e.target.id) {
-          console.log("" + e.target.id);
-        } else {
-          console.log("" + e.target.classList[0]);
-        }
+        $.Game.thing = (e.target.id? e.target.id : e.target.classList[0]);
+      });
+      screenObjs[i].addEventListener("mouseleave", function(e) {
+        $.Game.thing = '';
       });
     }
     

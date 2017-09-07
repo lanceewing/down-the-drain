@@ -9,6 +9,7 @@
 $.Ego = function() {
   $.Actor.call(this, 50, 150, 'rgb(197,179,88)', 0.95, 5);
   this.sprite.classList.add('ego');
+  this.sprite.id = 'me';
   this.setDirection($.Sprite.OUT);
 };
 
@@ -28,12 +29,9 @@ $.Ego.prototype.update = function() {
   
   if ((this.destX != -1) && (this.destZ != -1)) {
 	  if (this.touching({cx: this.destX, cy: this.cy, z: this.destZ, radius: -this.radius}, 20)) {
-	    if (this.step > 1.5) {
-		    this.reset();
-	    } else {
-	      // We've reached the destination.
-	      this.stop();
-	    }
+	    // We've reached the destination.
+	    this.stop();
+    
     } else {
       this.heading = Math.atan2(this.destZ - $.ego.z, this.destX - $.ego.cx);
       
