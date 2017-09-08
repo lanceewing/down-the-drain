@@ -174,7 +174,7 @@ $.Game = {
     // Create Ego (the main character) and add it to the screen.
     $.ego = new $.Ego();
     $.ego.add();
-    $.ego.setPosition(550, 0, 600);
+    $.ego.setPosition(400, 0, 600);
     
     // Starting inventory.
     this.getItem('chocolate coins');
@@ -183,7 +183,24 @@ $.Game = {
     // Enter the starting room.
     this.newRoom();
     
-    this.say('Hello!!');
+    // Intro text
+    this.userInput = false;
+    this.say('Hello!!', 100, function() { 
+      $.Game.say('My name is Pip.', 200, function() {
+        $.Game.say('I accidentally dropped by phone down a roadside drain.', 300, function() {
+          $.ego.moveTo(500, 600, function() {
+            $.Game.say('I climbed down here through that open drain to search for it.', 300, function() {
+              $.ego.setDirection($.Sprite.OUT);
+              $.Game.say('Unfortunately this is blocks away from where I dropped it.', 300, function() {
+                $.Game.say('Please help me to find it down here.', 200, function() {
+                  $.Game.userInput = true;
+                });
+              });
+            });
+          });
+        });
+      });
+    });
     
     // Fade in the whole screen at the start.
     this.fadeIn($.wrap);
@@ -302,7 +319,7 @@ $.Game = {
     }
     
     // Update the region name.
-    $.region.innerHTML = 'In the ' + this.region[0];
+    $.region.innerHTML = 'Down the Drain'; //'In the ' + this.region[0];
     
     // Draw the bricks if the region has them.
     if (this.region[1]) $.bricks.classList.add('bricks');
@@ -339,11 +356,21 @@ $.Game = {
     $.ego.show();
   },
   
-  say: function(text) {
+  say: function(text, width, next) {
     var bubble = document.createElement('span');
     bubble.className = 'speech';
     bubble.innerHTML = text;
+    bubble.style.width = width + 'px';
     $.ego.sprite.appendChild(bubble);
+    setTimeout(function() {
+      $.Game.fadeOut(bubble);
+      setTimeout(function() {
+        $.ego.sprite.removeChild(bubble);
+        if (next) {
+          next();
+        }
+      }, 500);
+    }, (text.length / 10) * 1500);
   },
   
   getItem: function(name) {
