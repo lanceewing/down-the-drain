@@ -174,7 +174,7 @@ $.Game = {
     // Create Ego (the main character) and add it to the screen.
     $.ego = new $.Ego();
     $.ego.add();
-    $.ego.setPosition(400, 0, 600);
+    $.ego.setPosition(500, 0, 600);
     
     // Starting inventory.
     this.getItem('chocolate coins');
@@ -183,17 +183,18 @@ $.Game = {
     // Enter the starting room.
     this.newRoom();
     
-    // Intro text
+    // Intro text.
     this.userInput = false;
     this.say('Hello!!', 100, function() { 
       $.Game.say('My name is Pip.', 200, function() {
-        $.Game.say('I accidentally dropped by phone down a roadside drain.', 300, function() {
-          $.ego.moveTo(500, 600, function() {
+        $.Game.say('I accidentally dropped my phone down a roadside drain...   Duh!!', 300, function() {
+          $.ego.moveTo(600, 600, function() {
             $.Game.say('I climbed down here through that open drain to search for it.', 300, function() {
-              $.ego.setDirection($.Sprite.OUT);
-              $.Game.say('Unfortunately this is blocks away from where I dropped it.', 300, function() {
-                $.Game.say('Please help me to find it down here.', 200, function() {
-                  $.Game.userInput = true;
+              $.ego.moveTo(600, 630, function() {
+                $.Game.say('Unfortunately this is blocks away from where it fell through.', 300, function() {
+                  $.Game.say('Please help me to find it down here.', 200, function() {
+                    $.Game.userInput = true;
+                  });
                 });
               });
             });
@@ -305,6 +306,13 @@ $.Game = {
   },
   
   /**
+   * 
+   */
+  processCommand: function() {
+    $.Logic.process(this.verb, this.command, this.thing);
+  },
+  
+  /**
    * Invoked when Ego is entering a room.  
    */
   newRoom: function() {
@@ -341,14 +349,18 @@ $.Game = {
     $.doors[0].style.display = (roomData[2]? 'block' : 'none');
     $.doors[1].style.display = (roomData[3]? 'block' : 'none');
     
-    // Add event listeners.
+    // Add event listeners for objects in the room.
     var screenObjs = $.screen.children;
     for (var i=0; i<screenObjs.length; i++) {
       screenObjs[i].addEventListener("mouseenter", function(e) {
-        $.Game.thing = (e.target.id? e.target.id : e.target.className); //classList[0]);
+        $.Game.thing = (e.target.id? e.target.id : e.target.className);
       });
       screenObjs[i].addEventListener("mouseleave", function(e) {
         $.Game.thing = '';
+      });
+      screenObjs[i].addEventListener("click", function(e) {
+        $.Game.thing = (e.target.id? e.target.id : e.target.className);
+        $.Game.processCommand();
       });
     }
     
@@ -358,14 +370,16 @@ $.Game = {
   
   say: function(text, width, next) {
     var bubble = document.createElement('span');
-    bubble.className = 'speech';
+    bubble.className = 'bubble';
     bubble.innerHTML = text;
     bubble.style.width = width + 'px';
+    bubble.style.left = -(width / 2) + 'px';
     $.ego.sprite.appendChild(bubble);
+    $.ego.sprite.classList.add('speech');
     setTimeout(function() {
-      $.Game.fadeOut(bubble);
+      $.ego.sprite.classList.remove('speech');
+      $.ego.sprite.removeChild(bubble);
       setTimeout(function() {
-        $.ego.sprite.removeChild(bubble);
         if (next) {
           next();
         }
@@ -374,7 +388,6 @@ $.Game = {
   },
   
   getItem: function(name) {
-    //this.items.push(name);   // TODO: Don't think we need this array. Can manage it with the dom itemlist.
     var item = document.createElement('span');
     item.innerHTML = name;
     $.items.appendChild(item);
@@ -384,6 +397,11 @@ $.Game = {
     });
     item.addEventListener("mouseleave", function(e) {
       $.Game.thing = '';
+    });
+    item.addEventListener("click", function(e) {
+      $.Game.thing = name;
+      $.Game.processCommand();
+      $.Game.command = this.verb = 'Walk to';
     });
   },
   
@@ -436,13 +454,8 @@ $.Game = {
   fadeIn: function(elem) {
     // Remove any previous transition.
     elem.removeAttribute('style');
-
-    // We need to change the opacity in a setTimeout to give the display change time to take effect first.
-    //setTimeout(function() {
-      // Setting the transition inline so that we can cancel it with the removeAttribute.
-      elem.style.transition = 'opacity 0.2s';
-      elem.style.opacity = 1.0;
-    //}, 100);
+    elem.style.transition = 'opacity 0.2s';
+    elem.style.opacity = 1.0;
   },
   
   /**

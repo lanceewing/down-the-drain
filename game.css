@@ -224,21 +224,20 @@ span {
 .left.right {
 	 box-shadow: #000 -85px 0 0px 0px inset, #000 85px 0 0px 0px inset;
 }
-.speech {
+.bubble {
 	font-size: smaller;
   padding: 15px;
   color: #fff;
   background: #AD9E7B;
   border-radius: 10px;
-  left: -40px;
   bottom: 177px;
 }
-.speech:after {
+.speech:before {
   content: "";
   display: block;
   position: absolute;
-  bottom: -15px;
-  left: 50px;
+  top: -27px;
+  left: 9px;
   width: 0;
   border-width: 15px 15px 0;
   border-style: solid;
