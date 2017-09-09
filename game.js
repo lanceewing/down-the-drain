@@ -47,9 +47,11 @@ $.Game = {
   
   props: [
     
-    // Room#, width, height, x, y, class
-    //[2, ],
+    // Room#, type, name, width, height, x, y
+    // types: 0 = actor, 1 = item, 2 = prop
+    [4, 0, 'grim reaper', 50, 150, 455, 540],
     
+    /*
     'fishing pole',
     'eel flashlight',
     'poisoned rat',
@@ -68,7 +70,7 @@ $.Game = {
     'hammer',
     'nails',
     'mop'
-    
+    */
     
   ],
   
@@ -335,6 +337,37 @@ $.Game = {
     // Doors (display none, display block)
     $.doors[0].style.display = (roomData[2]? 'block' : 'none');
     $.doors[1].style.display = (roomData[3]? 'block' : 'none');
+    
+    // Add props
+    for (var i=0; i<this.props.length; i++) {
+      var prop = this.props[i];
+      
+      // Is this prop in the current room?
+      if (prop[0] == this.room) {
+        var obj;
+        
+        // TODO: We should cache the obj when it isn't in the dom rather than recreate. It might remember it's state.
+        
+        // Switch on the type of prop
+        switch (prop[1]) {
+          case 0: // Actor
+            obj = new $.Actor(prop[3], prop[4], 'black', 0.95, 5, 'black');
+            obj.setDirection($.Sprite.OUT);
+            this.objs.push(obj);
+            break;
+            
+          case 1: // Item
+            break;
+            
+          case 2: // Prop
+            break;
+        }
+        
+        obj.sprite.id = prop[2];
+        obj.add();
+        obj.setPosition(prop[5], 0, prop[6]);
+      }
+    }
     
     // Add event listeners for objects in the room.
     var screenObjs = $.screen.children;
