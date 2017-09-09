@@ -278,7 +278,7 @@ $.Sprite.prototype.move = function() {
       
       // Check whether ego has gone through a door.
       if (z < 530) {
-        // We stop user input and allow the user to walk a bit further.
+        // We stop user input already and allow the user to walk a bit further.
         $.Game.userInput = false;
         // Fading effect as ego leaves through the door.
         this.sprite.style.opacity = 1.0 - ((530 - z) / 100);
@@ -294,8 +294,6 @@ $.Sprite.prototype.move = function() {
     }
 
     if (edge) {
-      // No need to adjust position at all in this case. Ego will enter new room. Rock 
-      // and Bomb will disappear. Enemy will stay where it is.
       this.hitEdge(edge);
     } else {
       // If x or z has changed, update the position already. This allows for better 

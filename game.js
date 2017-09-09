@@ -27,7 +27,7 @@ $.Game = {
     ['Caves',      0, '#000000', '#000000'],    // Grey walls, blue water
     ['Mines',      0, '#000000', ''],           // Brown walls, no water
     ['Catacombs',  1, '#000000', ''],           // Grey walls, no water, bricks
-    ['Underworld', 0, '#000000', '#000000'],    // Red tint, lava
+    ['Underworld', 0, '255,0,0', '207,16,32'],    // Red tint, lava
   ],
   
   /**
@@ -38,11 +38,18 @@ $.Game = {
     // Sewers
     [0,       , [2, 4], ,             , ''],  // [1] Entrance room.
     [0,       ,       , [3, 1], [1, 2], ''],  // [2]
-    [0, [2, 3],       ,       , [4, 2], ''],  // [3]
+    [0, [2, 3],       ,       , [4, 1], ''],  // [3]
+    
+    [4, [3, 4],       ,       ,       , ''],  // [4] Grim reaper's throne room.
+    
   ],
   
   
   props: [
+    
+    // Room#, width, height, x, y, class
+    //[2, ],
+    
     'fishing pole',
     'eel flashlight',
     'poisoned rat',
@@ -50,19 +57,22 @@ $.Game = {
     'wine bottle',
     'empty bottle',
     'old batteries',
-    'chocolate coins',
+    //'chocolate coins',
     'vinyl tape',
     'pipe',
     'lighter',
-    'book',
+    //'book',
     'suit of armour',
     'worm',
     'nylon string',
     'hammer',
     'nails',
     'mop'
+    
+    
   ],
   
+  // TODO: Probably not needed.
   items: [
 
   ],
@@ -138,7 +148,7 @@ $.Game = {
     
     // Set the room back to the start, and clear the object map.
     this.objs = [];
-    this.room = 1;
+    this.room = 4;//1;
     
     // Create Ego (the main character) and add it to the screen.
     $.ego = new $.Ego();
@@ -153,24 +163,24 @@ $.Game = {
     this.newRoom();
     
     // Intro text.
-    this.userInput = false;
-    this.say('Hello!!', 100, function() { 
-      $.Game.say('My name is Pip.', 200, function() {
-        $.Game.say('I accidentally dropped my phone down a curbside drain...   Duh!!', 300, function() {
-          $.ego.moveTo(600, 600, function() {
-            $.Game.say('I climbed down here through that open drain to search for it.', 300, function() {
-              $.ego.moveTo(600, 640, function() {
-                $.Game.say('Unfortunately this is blocks away from where it fell in.', 300, function() {
-                  $.Game.say('Please help me to find it down here.', 200, function() {
-                    $.Game.userInput = true;
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
-    });
+    //    this.userInput = false;
+    //    this.say('Hello!!', 100, function() {
+    //      $.Game.say('My name is Pip.', 200, function() {
+    //        $.Game.say('I accidentally dropped my phone down a curbside drain...   Duh!!', 300, function() {
+    //          $.ego.moveTo(600, 600, function() {
+    //            $.Game.say('I climbed down here through that open drain to search for it.', 300, function() {
+    //              $.ego.moveTo(600, 640, function() {
+    //                $.Game.say('Unfortunately this is blocks away from where it fell in.', 300, function() {
+    //                  $.Game.say('Please help me to find it down here.', 200, function() {
+    //                    $.Game.userInput = true;
+    //                  });
+    //                });
+    //              });
+    //            });
+    //          });
+    //        });
+    //      });
+    //    });
     
     // Fade in the whole screen at the start.
     this.fadeIn($.wrap);
@@ -303,7 +313,11 @@ $.Game = {
     $.region.innerHTML = 'Down the Drain'; //'In the ' + this.region[0];
     
     // Draw the bricks if the region has them.
-    if (this.region[1]) $.bricks.classList.add('bricks');
+    if (this.region[1]) {
+      $.bricks.classList.add('bricks');
+    } else {
+      $.bricks.classList.remove('bricks');
+    }
     
     // Room colouring
     $.wall.style.backgroundColor = 'rgb(' + this.region[2] + ')';
@@ -395,12 +409,12 @@ $.Game = {
    */
   renderWall: function() {
     // Render the base colour over the whole grass area first.
-    var ctx = $.Util.create2dContext(960, 220);
+    var ctx = $.Util.create2dContext(960, 260);
     ctx.fillStyle = 'hsl(0, 0%, 10%)';
-    ctx.fillRect(0, 0, 960, 220);
+    ctx.fillRect(0, 0, 960, 260);
     
     // Now randomaly adjust the luminosity of each pixel.
-    var imgData = ctx.getImageData(0, 0, 960, 220);
+    var imgData = ctx.getImageData(0, 0, 960, 260);
     for (var i=0; i<imgData.data.length; i+=4) {
       var texture = (Math.random() * 0.5);
       if (texture < 0.1) {
@@ -408,7 +422,7 @@ $.Game = {
         imgData.data[i]=Math.floor(imgData.data[i] * texture);
         imgData.data[i+1]=Math.floor(imgData.data[i+1] * texture);
         imgData.data[i+2]=Math.floor(imgData.data[i+2] * texture);
-        imgData.data[i+3]=210;
+        imgData.data[i+3]=200;
       } else {
         texture = 0.5 + texture;
         imgData.data[i]=Math.floor(imgData.data[i] / texture);
@@ -416,6 +430,7 @@ $.Game = {
         imgData.data[i+2]=Math.floor(imgData.data[i+2] / texture);
       }
     }
+    
     ctx.putImageData(imgData,0,0);
     return ctx.canvas;
   },

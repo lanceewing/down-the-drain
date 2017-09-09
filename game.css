@@ -184,6 +184,16 @@ span {
 	z-index: 1;
 	box-shadow: #111 0px 10px 25px 0px;
 }
+/*
+#platform {
+	bottom: 90px;
+	height: 80px;
+	width: 960px;
+	z-index: 1;
+	background-color: #333333;
+	opacity: 0.95;
+}
+*/
 #water {
   background: 
     linear-gradient(#222222 55%, rgba(255,255,255,0) 0) 0 0px,
@@ -202,7 +212,7 @@ span {
 }
 #wall {
   top: 0px;
-  height: 262px;
+  height: 260px;
   z-index: 0;
 }
 #sides {

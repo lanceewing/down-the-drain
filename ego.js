@@ -7,7 +7,7 @@
  * @extends Actor
  */
 $.Ego = function() {
-  $.Actor.call(this, 50, 150, 'rgb(197,179,88)', 0.95, 5);
+  $.Actor.call(this, 50, 150, 'grey', 0.95, 5, 'white', 'grey', 'red');
   this.sprite.classList.add('ego');
   this.sprite.id = 'me';
   this.setDirection($.Sprite.OUT);
@@ -97,6 +97,8 @@ $.Ego.prototype.hitEdge = function(edge) {
     this.destX = this.destZ = -1;
     this.heading = null;
     this.cell = 0;
+    
+    $.Game.userInput = false;
     
     // Now check if there is a room on this edge.
     if (edge < 5) {

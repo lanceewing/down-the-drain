@@ -6,8 +6,11 @@
  * @constructor
  * @extends Sprite
  */
-$.Actor = function() {
-  $.Sprite.apply(this, arguments);
+$.Actor = function(size, height, colour, texture, xzstep, face, hat, pack) {
+  this.face = face;
+  this.hat = hat;
+  this.pack = pack;
+  $.Sprite.call(this, size, height, colour, texture, xzstep);
   this.sprite.classList.add('actor');
 };
 
@@ -26,7 +29,10 @@ $.Actor.prototype.buildCanvas = function() {
   // For each direction, render the Actor facing in that direction.
   for (var c = 0; c < 3; c++) {
     for (var d = 0; d < 4; d++) {
-      ctx.drawImage($.Util.renderPerson(this.size, this.size * 3, d, c), d * this.size, c * this.size * 3);
+      ctx.drawImage(
+          $.Util.renderPerson(this.size, this.size * 3, d, c, this.face, this.colour, this.hat, this.pack), 
+          d * this.size, 
+          c * this.size * 3);
     }
   }
   
