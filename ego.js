@@ -111,6 +111,11 @@ $.Ego.prototype.hitEdge = function(edge) {
         // Work out the new position for ego.
         switch (edgeData[1]) {
           case 1: // From the left edge of screen
+            this.setPosition(0 - this.size * 2, this.y, 600);
+            this.setDirection($.Sprite.RIGHT);
+            this.moveTo(this.size + 50, 600, function() {
+              $.Game.userInput = true;
+            });
             break;
             
           case 2: // From the left door

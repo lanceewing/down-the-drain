@@ -36,8 +36,9 @@ $.Game = {
    */
   rooms: [
     // Sewers
-    [0, , [2, 4], ,             , ''],  // [1] Entrance room.
-    [0, ,       , [3, 1], [1, 2], ''],  // [2]
+    [0,       , [2, 4], ,             , ''],  // [1] Entrance room.
+    [0,       ,       , [3, 1], [1, 2], ''],  // [2]
+    [0, [2, 3],       ,       , [4, 2], ''],  // [3]
   ],
   
   
@@ -114,40 +115,8 @@ $.Game = {
       });
     }
     
-    // Register click event listeners for the item list.
-    for (var i=0; i<2; i++) {
-      $.doors[i].addEventListener("click", function(e) {
-        $.ego.stop();
-        
-        var door = e.target;
-        
-        // Walk to be in front of the door
-        $.ego.moveTo(door.offsetLeft + (door.offsetWidth / 2), $.ego.z);
-        
-        $.ego.moveTo(door.offsetLeft + (door.offsetWidth / 2), door.offsetTop);
-        
-        // We don't want the normal screen onclick to be fire.
-        e.stopPropagation();
-        
-        $.Game.command = $.Game.verb = 'Walk to';
-      });
-    }
-    
     $.screen.onclick = function(e) {
-      if ($.Game.userInput && ($.Game.verb == 'Walk to')) {
-        // Fully stop (includes clearing queued destination points)
-        $.ego.stop(true);
-        
-        var z = (e.pageY - $.wrap.offsetTop - 27) * 2;
-        
-        if (z > 530) {
-          $.ego.moveTo(e.pageX - $.wrap.offsetLeft, (e.pageY - $.wrap.offsetTop - 27) * 2);
-        } else {
-          $.ego.moveTo(e.pageX - $.wrap.offsetLeft, 600);
-        }
-      }
-      
-      $.Game.command = $.Game.verb = 'Walk to';
+      $.Game.processCommand(e);
     };
     
     // Initialise and then start the game loop.
@@ -187,11 +156,11 @@ $.Game = {
     this.userInput = false;
     this.say('Hello!!', 100, function() { 
       $.Game.say('My name is Pip.', 200, function() {
-        $.Game.say('I accidentally dropped my phone down a roadside drain...   Duh!!', 300, function() {
+        $.Game.say('I accidentally dropped my phone down a curbside drain...   Duh!!', 300, function() {
           $.ego.moveTo(600, 600, function() {
             $.Game.say('I climbed down here through that open drain to search for it.', 300, function() {
-              $.ego.moveTo(600, 630, function() {
-                $.Game.say('Unfortunately this is blocks away from where it fell through.', 300, function() {
+              $.ego.moveTo(600, 640, function() {
+                $.Game.say('Unfortunately this is blocks away from where it fell in.', 300, function() {
                   $.Game.say('Please help me to find it down here.', 200, function() {
                     $.Game.userInput = true;
                   });
@@ -308,8 +277,12 @@ $.Game = {
   /**
    * 
    */
-  processCommand: function() {
-    $.Logic.process(this.verb, this.command, this.thing);
+  processCommand: function(e) {
+    if (this.userInput) {
+      $.Logic.process(this.verb, this.command, this.thing, e);
+      if (e) e.stopPropagation();
+      this.command = this.verb = 'Walk to';
+    }
   },
   
   /**
@@ -352,16 +325,18 @@ $.Game = {
     // Add event listeners for objects in the room.
     var screenObjs = $.screen.children;
     for (var i=0; i<screenObjs.length; i++) {
-      screenObjs[i].addEventListener("mouseenter", function(e) {
+      // It is important that we don't use addEventListener in this case. We need to overwrite
+      // the event handler on entering each room.
+      screenObjs[i].onmouseenter = function(e) {
         $.Game.thing = (e.target.id? e.target.id : e.target.className);
-      });
-      screenObjs[i].addEventListener("mouseleave", function(e) {
+      };
+      screenObjs[i].onmouseleave = function(e) {
         $.Game.thing = '';
-      });
-      screenObjs[i].addEventListener("click", function(e) {
+      };
+      screenObjs[i].onclick = function(e) {
         $.Game.thing = (e.target.id? e.target.id : e.target.className);
-        $.Game.processCommand();
-      });
+        $.Game.processCommand(e);
+      };
     }
     
     $.Game.fadeIn($.screen);
@@ -400,8 +375,7 @@ $.Game = {
     });
     item.addEventListener("click", function(e) {
       $.Game.thing = name;
-      $.Game.processCommand();
-      $.Game.command = this.verb = 'Walk to';
+      $.Game.processCommand(e);
     });
   },
   

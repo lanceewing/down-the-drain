@@ -3,7 +3,10 @@
  */
 $.Logic = {};
 
-$.Logic.process = function(verb, cmd, thing) {
+/**
+ * 
+ */
+$.Logic.process = function(verb, cmd, thing, e) {
 
   // TODO: Individual room logic up here.
   
@@ -11,6 +14,28 @@ $.Logic.process = function(verb, cmd, thing) {
   // Generic logic for all rooms.
   
   switch (verb) {
+  
+    case 'Walk to':
+      switch (thing) {
+        case 'door':
+          $.ego.stop();
+          // Walk to be in front of the door
+          $.ego.moveTo(e.target.offsetLeft + (e.target.offsetWidth / 2), $.ego.z);
+          // Now walk through the door.
+          $.ego.moveTo(e.target.offsetLeft + (e.target.offsetWidth / 2), e.target.offsetTop);
+          break;
+          
+        default:
+          $.ego.stop(true);
+          var z = (e.pageY - $.wrap.offsetTop - 27) * 2;
+          if (z > 530) {
+            $.ego.moveTo(e.pageX - $.wrap.offsetLeft, (e.pageY - $.wrap.offsetTop - 27) * 2);
+          } else {
+            $.ego.moveTo(e.pageX - $.wrap.offsetLeft, 600);
+          }
+          break;
+      }
+      break;
   
     case 'Look at':
       switch (thing) {
@@ -55,7 +80,7 @@ $.Logic.process = function(verb, cmd, thing) {
           break;
           
         default:
-          $.Game.say("Uh...  No.", 140);
+          $.Game.say("Uh...  No.", 130);
           break;
       }
       break;
