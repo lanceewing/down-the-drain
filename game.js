@@ -47,9 +47,9 @@ $.Game = {
   
   props: [
     
-    // Room#, type, name, width, height, x, y
+    // Room#, type, name, width, height, x, y, element reference
     // types: 0 = actor, 1 = item, 2 = prop
-    [4, 0, 'grim reaper', 50, 150, 455, 540],
+    [4, 0, 'grim reaper', 50, 150, 455, 540, null],
     
     /*
     'fishing pole',
@@ -301,6 +301,12 @@ $.Game = {
    * Invoked when Ego is entering a room.  
    */
   newRoom: function() {
+    // Remove the previous room's Sprites from the screen.
+    for (i=0; i<this.objs.length; i++) {
+      this.objs[i].remove();
+    }
+    this.objs = [];
+    
     var roomData = this.rooms[this.room - 1];
     this.region = this.regions[roomData[0]];
     
@@ -347,25 +353,33 @@ $.Game = {
         var obj;
         
         // TODO: We should cache the obj when it isn't in the dom rather than recreate. It might remember it's state.
+        obj = prop[7];
         
-        // Switch on the type of prop
-        switch (prop[1]) {
-          case 0: // Actor
-            obj = new $.Actor(prop[3], prop[4], 'black', 0.95, 5, 'black');
-            obj.setDirection($.Sprite.OUT);
-            this.objs.push(obj);
-            break;
-            
-          case 1: // Item
-            break;
-            
-          case 2: // Prop
-            break;
+        if (!obj) {
+          // Switch on the type of prop
+          switch (prop[1]) {
+            case 0: // Actor
+              obj = new $.Actor(prop[3], prop[4], 'black', 0.95, 5, 'black');
+              obj.setDirection($.Sprite.OUT);
+              break;
+              
+            case 1: // Item
+              break;
+              
+            case 2: // Prop
+              break;
+          }
+          
+          obj.sprite.id = prop[2];
+          obj.add();
+          obj.setPosition(prop[5], 0, prop[6]);
+          prop[7] = obj;
+        }
+        else {
+          obj.add();
         }
         
-        obj.sprite.id = prop[2];
-        obj.add();
-        obj.setPosition(prop[5], 0, prop[6]);
+        this.objs.push(obj);
       }
     }
     

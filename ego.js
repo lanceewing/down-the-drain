@@ -98,12 +98,12 @@ $.Ego.prototype.hitEdge = function(edge) {
     this.heading = null;
     this.cell = 0;
     
-    $.Game.userInput = false;
-    
     // Now check if there is a room on this edge.
     if (edge < 5) {
       var edgeData = $.Game.rooms[this.room - 1][edge];
       if (edgeData) {
+        $.Game.userInput = false;
+        
         // Hide ego before we reposition him to the new entry point.
         this.hide();
         
