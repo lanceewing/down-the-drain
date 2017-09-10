@@ -57,3 +57,25 @@ $.Actor.prototype.stop = function(fully) {
 $.Actor.prototype.moveTo = function(x, z, fn) {
   this.dests.push({z: z, x: x, fn: fn});
 };
+
+$.Actor.prototype.say = function(text, width, next) {
+  var bubble = document.createElement('span');
+  bubble.className = 'bubble';
+  bubble.innerHTML = text;
+  bubble.style.width = width + 'px';
+  bubble.style.left = -(width / 2) + 'px';
+  
+  var sprite = this.sprite;
+  sprite.appendChild(bubble);
+  sprite.classList.add('speech');
+  
+  setTimeout(function() {
+    sprite.classList.remove('speech');
+    sprite.removeChild(bubble);
+    setTimeout(function() {
+      if (next) {
+        next();
+      }
+    }, 500);
+  }, (text.length / 10) * 1500);
+};

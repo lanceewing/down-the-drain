@@ -49,7 +49,7 @@ $.Game = {
     
     // Room#, type, name, width, height, x, y, element reference
     // types: 0 = actor, 1 = item, 2 = prop
-    [4, 0, 'grim reaper', 50, 150, 455, 540, null],
+    [4, 0, 'reaper', 50, 150, 455, 540, null],
     
     /*
     'fishing pole',
@@ -352,7 +352,7 @@ $.Game = {
       if (prop[0] == this.room) {
         var obj;
         
-        // TODO: We should cache the obj when it isn't in the dom rather than recreate. It might remember it's state.
+        // We cache the obj when it isn't in the dom rather than recreate. It might remember it's state.
         obj = prop[7];
         
         if (!obj) {
@@ -361,6 +361,7 @@ $.Game = {
             case 0: // Actor
               obj = new $.Actor(prop[3], prop[4], 'black', 0.95, 5, 'black');
               obj.setDirection($.Sprite.OUT);
+              $[prop[2]] = obj;
               break;
               
             case 1: // Item
@@ -402,25 +403,6 @@ $.Game = {
     
     $.Game.fadeIn($.screen);
     $.ego.show();
-  },
-  
-  say: function(text, width, next) {
-    var bubble = document.createElement('span');
-    bubble.className = 'bubble';
-    bubble.innerHTML = text;
-    bubble.style.width = width + 'px';
-    bubble.style.left = -(width / 2) + 'px';
-    $.ego.sprite.appendChild(bubble);
-    $.ego.sprite.classList.add('speech');
-    setTimeout(function() {
-      $.ego.sprite.classList.remove('speech');
-      $.ego.sprite.removeChild(bubble);
-      setTimeout(function() {
-        if (next) {
-          next();
-        }
-      }, 500);
-    }, (text.length / 10) * 1500);
   },
   
   getItem: function(name) {
