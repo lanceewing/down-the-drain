@@ -17,10 +17,10 @@ $.Sprite = function(size, height, colour, texture, xzstep) {
   this.colour = colour;
   this.texture = texture;
   this.room = $.Game.room;
-  this.sprite = document.createElement('span');
-  this.sprite.classList.add('sprite');
+  this.elem = document.createElement('span');
+  this.elem.classList.add('sprite');
   
-  var style = this.sprite.style;
+  var style = this.elem.style;
   style.width = (this.size + 'px');
   style.height = (this.height + 'px');
   
@@ -59,23 +59,23 @@ $.Sprite.prototype.buildCanvas = function() {
  * Adds this Sprite into the current room.
  */
 $.Sprite.prototype.add = function() {
-  $.screen.appendChild(this.sprite);
+  $.screen.appendChild(this.elem);
 };
 
 /**
  * Removes this Sprite from the current room.
  */
 $.Sprite.prototype.remove = function() {
-  $.screen.removeChild(this.sprite);
+  $.screen.removeChild(this.elem);
 };
 
 $.Sprite.prototype.hide = function() {
-  this.sprite.style.display = 'none';
-  this.sprite.style.opacity = 1.0;
+  this.elem.style.display = 'none';
+  this.elem.style.opacity = 1.0;
 };
 
 $.Sprite.prototype.show = function() {
-  this.sprite.style.display = 'block';
+  this.elem.style.display = 'block';
 };
 
 /**
@@ -165,9 +165,9 @@ $.Sprite.prototype.setPosition = function(x, y, z) {
 
   // Update the style of the sprite to reflect the new position.
   var top = this.top = Math.floor(this.z / 2) - this.height - Math.floor(this.y);
-  this.sprite.style.top = top + 'px';
-  this.sprite.style.left = (this.x) + 'px';
-  this.sprite.style.zIndex = Math.floor(this.z);
+  this.elem.style.top = top + 'px';
+  this.elem.style.left = (this.x) + 'px';
+  this.elem.style.zIndex = Math.floor(this.z);
 };
 
 // These are constants use to represent the different directions. They can be ORed 
@@ -207,7 +207,7 @@ $.Sprite.prototype.setDirection = function(direction) {
   if (this.canvas && (this.canvas.width > this.size)) {
     // Adjust the background position to show the correct part of the sprite sheet for the direction.
     this.backgroundX = (-((this.facing - 1) * this.size));
-    this.sprite.style.backgroundPosition = this.backgroundX + 'px ' + (this.backgroundY + (~~(this.cell/10) * this.height)) + 'px';
+    this.elem.style.backgroundPosition = this.backgroundX + 'px ' + (this.backgroundY + (~~(this.cell/10) * this.height)) + 'px';
   }
 };
 
@@ -258,7 +258,7 @@ $.Sprite.prototype.move = function() {
         // We stop user input already and allow the user to walk a bit further.
         $.Game.userInput = false;
         // Fading effect as ego leaves through the door.
-        this.sprite.style.opacity = 1.0 - ((530 - z) / 100);
+        this.elem.style.opacity = 1.0 - ((530 - z) / 100);
       }
       if (z < 500) {
         // Ego has now reached the horizon, so time for a room change. The x value

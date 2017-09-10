@@ -397,7 +397,7 @@ $.Game = {
               break;
           }
           
-          obj.sprite.id = prop[2];
+          obj.elem.id = prop[2];
           obj.add();
           obj.setPosition(prop[5], 0, prop[6]);
           prop[7] = obj;

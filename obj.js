@@ -8,7 +8,7 @@ $.Obj = function(width, height, x, z, y) {
   this.y = y;
   
   this.elem = document.createElement('span');
-  var style = this.sprite.style;
+  var style = this.elem.style;
   style.width = (this.size + 'px');
   style.height = (this.height + 'px');
   

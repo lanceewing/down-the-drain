@@ -11,7 +11,7 @@ $.Actor = function(size, height, colour, texture, xzstep, face, hat, pack) {
   this.hat = hat;
   this.pack = pack;
   $.Sprite.call(this, size, height, colour, texture, xzstep);
-  this.sprite.classList.add('actor');
+  this.elem.classList.add('actor');
 };
 
 $.Actor.prototype = Object.create($.Sprite.prototype);
@@ -65,13 +65,13 @@ $.Actor.prototype.say = function(text, width, next) {
   bubble.style.width = width + 'px';
   bubble.style.left = -(width / 2) + 'px';
   
-  var sprite = this.sprite;
-  sprite.appendChild(bubble);
-  sprite.classList.add('speech');
+  var elem = this.elem;
+  elem.appendChild(bubble);
+  elem.classList.add('speech');
   
   setTimeout(function() {
-    sprite.classList.remove('speech');
-    sprite.removeChild(bubble);
+    elem.classList.remove('speech');
+    elem.removeChild(bubble);
     setTimeout(function() {
       if (next) {
         next();

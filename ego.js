@@ -8,8 +8,8 @@
  */
 $.Ego = function() {
   $.Actor.call(this, 50, 150, 'grey', 0.95, 5, 'white', 'grey', 'red');
-  this.sprite.classList.add('ego');
-  this.sprite.id = 'me';
+  this.elem.classList.add('ego');
+  this.elem.id = 'me';
   this.setDirection($.Sprite.OUT);
 };
 
