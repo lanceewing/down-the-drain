@@ -24,7 +24,7 @@ $.Game = {
    */
   regions: [
     ['Sewers',     1, '108,141,36', '108,141,36'],    // Greenish tint, green water, bricks
-    ['Caves',      0, '#000000', '#000000'],    // Grey walls, blue water
+    ['Caves',      1, '0,0,0', '68,136,187'],    // Grey walls, blue water
     ['Mines',      0, '#000000', ''],           // Brown walls, no water
     ['Catacombs',  1, '#000000', ''],           // Grey walls, no water, bricks
     ['Underworld', 0, '255,0,0', '207,16,32'],    // Red tint, lava
@@ -35,12 +35,20 @@ $.Game = {
    * door are handled as props), name override.
    */
   rooms: [
-    // Sewers
+
     [0,       , [2, 4], ,             , ''],  // [1] Entrance room.
     [0,       ,       , [3, 1], [1, 2], ''],  // [2]
-    [0, [2, 3],       ,       , [4, 1], ''],  // [3]
+    [0, [2, 3], [5, 4], [6, 1], [4, 1], ''],  // [3]
     
     [4, [3, 4],       ,       ,       , ''],  // [4] Grim reaper's throne room.
+    
+    [0, [7, 2],       ,       , [3, 2], ''],  // 5
+    
+    [0, [7, 2],       ,       , [4, 3], ''],
+    
+    [1,       , [5, 1],       , [8, 1], ''], // [7]
+    
+    [1, [7, 4],       ,       ,       , ''], // [8] Homeless man's cave
     
   ],
   
@@ -50,6 +58,13 @@ $.Game = {
     // Room#, type, name, width, height, x, y, element reference
     // types: 0 = actor, 1 = item, 2 = prop
     [4, 0, 'reaper', 50, 150, 455, 540, null],
+    
+    [8, 0, 'man', 50, 150, 455, 540, null],
+    
+    //[8, 2, 'blanket', 200, 30, 400, 530, null],
+    
+    
+    //[2, 2, 'cupboard', 100, 200, 200, 530, null],
     
     /*
     'fishing pole',
@@ -94,7 +109,6 @@ $.Game = {
     // Get a reference to each of the elements in the DOM that we'll need to update.
 	  $.wrap = document.getElementById('wrap');
     $.screen = document.getElementById('screen');
-    $.shadow = document.getElementById('shadow');
     $.wall = document.getElementById('wall');
     $.bricks = document.getElementById('bricks');
     $.sides = document.getElementById('sides');
@@ -150,7 +164,7 @@ $.Game = {
     
     // Set the room back to the start, and clear the object map.
     this.objs = [];
-    this.room = 4;//1;
+    this.room = 1;
     
     // Create Ego (the main character) and add it to the screen.
     $.ego = new $.Ego();
@@ -359,15 +373,27 @@ $.Game = {
           // Switch on the type of prop
           switch (prop[1]) {
             case 0: // Actor
-              obj = new $.Actor(prop[3], prop[4], 'black', 0.95, 5, 'black');
-              obj.setDirection($.Sprite.OUT);
+              switch (prop[2]) {
+                case 'reaper':
+                  obj = new $.Actor(prop[3], prop[4], 'black', 0.95, 5, 'black');
+                  obj.setDirection($.Sprite.OUT);
+                  break;
+                case 'man':
+                  obj = new $.Actor(prop[3], prop[4], '#614126', 0.95, 5, '#ccffcc', '#926239');
+                  obj.setDirection($.Sprite.OUT);
+                  break;
+                case 'engineer':
+                  break;
+              }
               $[prop[2]] = obj;
               break;
               
             case 1: // Item
+              
               break;
               
             case 2: // Prop
+              
               break;
           }
           

@@ -1,16 +1,7 @@
 /**
  * Creates a new Sprite. This is the base class for all Sprites. All Sprites are spheres.
- *
- * @constructor
- * @param {number} size The size of the Sprite in pixels. Used for size in all three dimensions.
- * 
- * @param {string} colour The base colour of the Sprite. Used when rendering the background image sprite sheet.
- * @param {number} texture The amount of random variation in the surface colour of the Sprite.
- * @param {number} xzstep The step size for the x and z directions. This is the max number of pixels to move every frame.
- * @param {number} ystep The step size for the y direction. This is the max number of pixels to move every frame.
- * @param {number} g The gravity acceleration. This can be different for different sprites. Currently used by Enemy only.
  */
-$.Sprite = function(size, height, colour, texture, xzstep, ystep, g) {
+$.Sprite = function(size, height, colour, texture, xzstep) {
   this.x = 0;
   this.y = 0;
   this.z = 0;
@@ -26,8 +17,6 @@ $.Sprite = function(size, height, colour, texture, xzstep, ystep, g) {
   this.colour = colour;
   this.texture = texture;
   this.room = $.Game.room;
-  this.shadowOffset = (this.size / 10);
-  this.shadow = $.Util.renderShadow(this.size);
   this.sprite = document.createElement('span');
   this.sprite.classList.add('sprite');
   
@@ -41,17 +30,13 @@ $.Sprite = function(size, height, colour, texture, xzstep, ystep, g) {
     style.backgroundImage = 'url(' + this.canvas.toDataURL("image/png") + ')';
   } else {
     style.backgroundColor = colour;
-    this.shadow.style.opacity = 0.5;
   }
   
   this.maxStep = xzstep;
-  this.yStep = this.maxYStep = ystep || 10;
   this.step = this.stepInc = (this.maxStep / 10);
-  this.g = g;
   this.direction = 0;
   this.directionLast = 1;
   this.heading = null;
-  this.maxY = 200;
   this.backgroundX = 0;
   this.backgroundY = 0;
   this.facing = 1;
@@ -60,7 +45,6 @@ $.Sprite = function(size, height, colour, texture, xzstep, ystep, g) {
   this.destFn = null;
   this.dests = [];
   this.cell = 0;
-  this.fixedPriority = false;
 };
 
 /**
@@ -76,7 +60,6 @@ $.Sprite.prototype.buildCanvas = function() {
  */
 $.Sprite.prototype.add = function() {
   $.screen.appendChild(this.sprite);
-  $.shadow.appendChild(this.shadow);
 };
 
 /**
@@ -84,18 +67,15 @@ $.Sprite.prototype.add = function() {
  */
 $.Sprite.prototype.remove = function() {
   $.screen.removeChild(this.sprite);
-  $.shadow.removeChild(this.shadow);
 };
 
 $.Sprite.prototype.hide = function() {
   this.sprite.style.display = 'none';
-  this.shadow.style.display = 'none';
   this.sprite.style.opacity = 1.0;
 };
 
 $.Sprite.prototype.show = function() {
   this.sprite.style.display = 'block';
-  this.shadow.style.display = 'block';
 };
 
 /**
@@ -143,7 +123,7 @@ $.Sprite.prototype.reset = function() {
 
   // We need to switch to small steps when we reset position so we can get as close
   // as possible to other Sprites.
-  this.step  = this.yStep = 1;
+  this.step = 1;
   
   return pos;
 };
@@ -183,11 +163,8 @@ $.Sprite.prototype.setPosition = function(x, y, z) {
   this.cy = y + this.radius;
   this.cz = z - this.radius;
 
-  // Update the style of the sprite and shadow elements to reflect the new position.
+  // Update the style of the sprite to reflect the new position.
   var top = this.top = Math.floor(this.z / 2) - this.height - Math.floor(this.y);
-  this.shadow.style.top = ((this.z / 2) - this.shadowOffset - 215) + 'px';
-  this.shadow.style.left = (this.x) + 'px';
-  this.shadow.style.opacity = 0.9 - (y * (1.0/400));
   this.sprite.style.top = top + 'px';
   this.sprite.style.left = (this.x) + 'px';
   this.sprite.style.zIndex = Math.floor(this.z);
@@ -296,50 +273,10 @@ $.Sprite.prototype.move = function() {
     if (edge) {
       this.hitEdge(edge);
     } else {
-      // If x or z has changed, update the position already. This allows for better 
-      // movement over the surface of the Orb or Rocks.
+      // If x or z has changed, update the position.
       if ((x != this.x) || (z != this.z)) {
         this.setPosition(x, y, z);
         this.moved = true;
-      }
-      
-      if (this.direction & $.Sprite.DOWN) {
-        // If the Sprite is moving down, decrease the y position.
-        y -= Math.round(this.yStep * $.Game.stepFactor);
-        
-        // If g is set, the increase the ystep by g so the Sprite falls quicker.
-        if (this.g) this.yStep += this.g;
-        
-        // Has the Sprite reached the ground?
-        if (y < 0) {
-          this.direction &= 0x0F;
-          this.maxY = 200;
-          y = 0;
-          this.yStep = this.maxYStep;
-          this.hitEdge();
-        }
-      }
-      
-      if (this.direction & $.Sprite.UP) {
-        // If the Sprite is moving up, increase the y position.
-        y += Math.round(this.yStep * $.Game.stepFactor);
-        
-        // If g is set, then reduce the ystep so the Sprite slows it's upward speed. 
-        if (this.g) this.yStep -= this.g;
-        
-        // If the y position reaches the max, or the ystep value has been reduced below
-        // zero, then the Sprite should start to fall. So clear the upward direction and
-        // add the downward direction.
-        if ((y >= this.maxY) || (this.yStep <= 0)) {
-          this.direction = (this.direction & 0x0F) | $.Sprite.DOWN;
-          y = Math.min(y, this.maxY);
-        }
-      }
-
-      // If the calculated y value has changed from the current Sprite's y position, then 
-      // update the Sprite position now.
-      if (y != this.y) {
-        this.setPosition(this.x, y, this.z);
       }
     }
   } else {
@@ -350,9 +287,7 @@ $.Sprite.prototype.move = function() {
 };
 
 /**
- * Updates this Sprite for the current animation frame. The default behaviour is to trigger
- * the Sprite's movement for this frame, and then if Ego is on this sprite, to render the 
- * surface shadow. Examples of this shadow are when Ego is sitting on the Orb or a Rock.
+ * Updates this Sprite for the current animation frame.
  */
 $.Sprite.prototype.update = function() {
   if (!this.moved) {

@@ -37,25 +37,10 @@ $.Util.create2dContext = function(w, h) {
 };
 
 /**
- * Utility function for creating a shadow of the given size. All Sprites have a
- * ground shadow and use this function to create that shadow. All shadows have a
- * border radius of 50%, which results in the span being elliptical.
- *  
- * @param {number} size The width of the shadow. The height will be one fifth of this size.
- */
-$.Util.renderShadow = function(size) {
-  var shadow = document.createElement('span');
-  shadow.className = 'shadow';
-  shadow.style.width = size + 'px';
-  shadow.style.height = (size / 5) + 'px';
-  return shadow;
-};
-
-/**
  * 
  */
 $.Util.renderPerson = function(w, h, direction, c, face, clothes, hat, pack) {
-  var ctx = $.Util.create2dContext(w, h);
+  var ctx = $.Util.create2dContext(w, h + (w / 10));
 
   var ballSize = (w / 5);
   ctx.lineWidth = 4;
