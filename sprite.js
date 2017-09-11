@@ -2,7 +2,7 @@
  * Creates a new Sprite. A Sprite is a screen object that uses a canvas for the background.
  */
 $.Sprite = function(width, height, colour, texture, xzstep) {
-  $.Obj.call(this, width, height, 0, 0, 0);
+  $.Obj.call(this, width, height, 0);
 
   this.moved = false;
   this.positions = [];

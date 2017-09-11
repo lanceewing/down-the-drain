@@ -7,6 +7,7 @@ $.Logic = {};
  * 
  */
 $.Logic.process = function(verb, cmd, thing, e) {
+  var newCommand = cmd;
 
   // TODO: Individual room logic up here.
   
@@ -99,8 +100,38 @@ $.Logic.process = function(verb, cmd, thing, e) {
       }
       break;
   
+    case 'Give':
+      if (cmd == verb) {
+        newCommand = 'Give ' + thing + ' to ';
+      } else {
+        switch (cmd + thing) {
+          case 'Give book to man':
+            $.man.say("Thanks! That will be very useful down here.", 250);
+            $.Game.dropItem('book');
+            break;
+        }
+        
+        newCommand = verb;
+      }
+      break;
+      
+    case 'Pick up':
+      switch (thing) {
+        case 'doll':
+          if ($.Game.hasItem('book')) {
+            $.ego.say("The man won't let me.", 270);
+          } else {
+            $.Game.getItem('doll');
+            $.screen.removeChild($.doll);
+            // TODO: Need boolean in props to say whether it is still on screen or not.
+          }
+          break;
+      
+      }
+      break;
+      
   }
   
-  
+  return newCommand;
 };
 

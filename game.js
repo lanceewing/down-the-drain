@@ -61,7 +61,9 @@ $.Game = {
     
     [8, 0, 'man', 50, 150, 455, 540, null],
     
-    //[8, 2, 'blanket', 200, 30, 400, 530, null],
+    [8, 2, 'blanket', 160, 15, 400, 550, null, 530],
+    
+    [8, 0, 'doll', 20, 60, 523, 540, null, , 0],
     
     
     //[2, 2, 'cupboard', 100, 200, 200, 530, null],
@@ -89,10 +91,7 @@ $.Game = {
     
   ],
   
-  // TODO: Probably not needed.
-  items: [
-
-  ],
+  inventory: {},
   
   verb: 'Walk to',
   
@@ -164,7 +163,7 @@ $.Game = {
     
     // Set the room back to the start, and clear the object map.
     this.objs = [];
-    this.room = 1;
+    this.room = 8;//1;
     
     // Create Ego (the main character) and add it to the screen.
     $.ego = new $.Ego();
@@ -305,9 +304,11 @@ $.Game = {
    */
   processCommand: function(e) {
     if (this.userInput) {
-      $.Logic.process(this.verb, this.command, this.thing, e);
+      this.command = $.Logic.process(this.verb, this.command, this.thing, e);
       if (e) e.stopPropagation();
-      this.command = this.verb = 'Walk to';
+      if (this.command == this.verb) {
+        this.command = this.verb = 'Walk to';
+      }
     }
   },
   
@@ -382,18 +383,22 @@ $.Game = {
                   obj = new $.Actor(prop[3], prop[4], '#614126', 0.95, 5, '#ccffcc', '#926239');
                   obj.setDirection($.Sprite.OUT);
                   break;
+                case 'doll':
+                  obj = new $.Actor(prop[3], prop[4], '#111', 0.95, 5, '#111');
+                  obj.setDirection($.Sprite.OUT);
+                  break;
                 case 'engineer':
                   break;
               }
               $[prop[2]] = obj;
+              obj.setPosition(prop[5], 0, prop[6]);
               break;
               
             case 1: // Item
-              
               break;
               
             case 2: // Prop
-              
+              obj = new $.Obj(prop[3], prop[4], prop[8]);
               break;
           }
           
@@ -446,6 +451,18 @@ $.Game = {
       $.Game.thing = name;
       $.Game.processCommand(e);
     });
+    
+    this.inventory[name] = item;
+  },
+  
+  hasItem: function(name) {
+    return this.inventory.hasOwnProperty(name);
+  },
+  
+  dropItem: function(name) {
+    var item = this.inventory[name];
+    $.items.removeChild(item);
+    delete this.inventory[name];
   },
   
   scrollInv: function(dir) {
