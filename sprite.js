@@ -47,29 +47,6 @@ $.Sprite.prototype.buildCanvas = function() {
 };
 
 /**
- * Adds this Sprite into the current room.
- */
-$.Sprite.prototype.add = function() {
-  $.screen.appendChild(this.elem);
-};
-
-/**
- * Removes this Sprite from the current room.
- */
-$.Sprite.prototype.remove = function() {
-  $.screen.removeChild(this.elem);
-};
-
-$.Sprite.prototype.hide = function() {
-  this.elem.style.display = 'none';
-  this.elem.style.opacity = 1.0;
-};
-
-$.Sprite.prototype.show = function() {
-  this.elem.style.display = 'block';
-};
-
-/**
  * Tests whether the given Sprite is touching this Sprite. There is an optional gap 
  * parameter, which provides more of a "close too" check rather than actually touching.
  *
@@ -161,18 +138,11 @@ $.Sprite.prototype.setPosition = function(x, y, z) {
   this.elem.style.zIndex = Math.floor(this.z);
 };
 
-// These are constants use to represent the different directions. They can be ORed 
-// together and therefore have bit values that allow for this. For example, a Sprite
-// might be moving left, in, and up.
+// These are constants use to represent the different directions.
 $.Sprite.LEFT  = 0x01;
 $.Sprite.RIGHT = 0x02;
 $.Sprite.IN    = 0x04;
 $.Sprite.OUT   = 0x08;
-$.Sprite.UP    = 0x10;
-$.Sprite.DOWN  = 0x20;
-
-// A special direction where the Sprite is hovering, i.e. flying.
-$.Sprite.UP_DOWN = ($.Sprite.UP | $.Sprite.DOWN);
 
 /**
  * Sets the direction of this Sprite to the new direction provided. The direction is
