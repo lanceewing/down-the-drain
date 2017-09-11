@@ -195,21 +195,3 @@ $.Util.renderSphere = function(size, direction, colour, texture, eye) {
   return ctx.canvas;
 };
 
-/**
- * Converts a direction value to a heading value.
- *  
- * @param {number} dir The direction value to convert.
- */
-$.Util.dirToHeading = function(dir) {
-  return Math.atan2(((dir & 0x08) >> 3) - ((dir & 0x04) >> 2), ((dir & 0x02) >> 1) - (dir & 0x01));
-};
-
-/**
- * Converts the given rgb colour to an rgba colour, using the given opacity value.
- * 
- * @param {string} rgb The rgb colour to convert.
- * @param {number} a The opacity value to use.
- */
-$.Util.rgbToRgba = function(rgb, a) {
-  return rgb.replace('rgb', 'rgba').replace(/\)$/, ',' + a + ')');
-};

@@ -1,37 +1,25 @@
 /**
- * Creates a new Sprite. This is the base class for all Sprites. All Sprites are spheres.
+ * Creates a new Sprite. A Sprite is a screen object that uses a canvas for the background.
  */
-$.Sprite = function(size, height, colour, texture, xzstep) {
-  this.x = 0;
-  this.y = 0;
-  this.z = 0;
-  this.cx = 0;
-  this.cy = 0;
-  this.cz = 0;
-  this.top = 0;
+$.Sprite = function(width, height, colour, texture, xzstep) {
+  $.Obj.call(this, width, height, 0, 0, 0);
+
   this.moved = false;
   this.positions = [];
-  this.size = size;
-  this.height = height;
-  this.radius = size / 2;
+  this.radius = width / 2;
   this.colour = colour;
   this.texture = texture;
-  this.room = $.Game.room;
-  this.elem = document.createElement('span');
-  this.elem.classList.add('sprite');
   
-  var style = this.elem.style;
-  style.width = (this.size + 'px');
-  style.height = (this.height + 'px');
+  this.elem.classList.add('sprite');
   
   this.canvas = this.buildCanvas();
   
-  if (this.canvas) {
-    style.backgroundImage = 'url(' + this.canvas.toDataURL("image/png") + ')';
-  } else {
-    style.backgroundColor = colour;
-  }
+  var style = this.elem.style;
+  style.backgroundImage = 'url(' + this.canvas.toDataURL("image/png") + ')';
   
+  this.cx = 0;
+  this.cy = 0;
+  this.cz = 0;
   this.maxStep = xzstep;
   this.step = this.stepInc = (this.maxStep / 10);
   this.direction = 0;
@@ -47,12 +35,15 @@ $.Sprite = function(size, height, colour, texture, xzstep) {
   this.cell = 0;
 };
 
+$.Sprite.prototype = Object.create($.Obj.prototype);
+$.Sprite.prototype.constructor = $.Obj;
+
 /**
  * Builds the background image canvas for this Sprite. This is the default implementation,
  * which renders a sphere using the colour and texture of the Sprite.
  */
 $.Sprite.prototype.buildCanvas = function() {
-  return $.Util.renderSphere(this.size, -1, this.colour, this.texture);
+  return $.Util.renderSphere(this.width, -1, this.colour, this.texture);
 };
 
 /**
@@ -164,7 +155,7 @@ $.Sprite.prototype.setPosition = function(x, y, z) {
   this.cz = z - this.radius;
 
   // Update the style of the sprite to reflect the new position.
-  var top = this.top = Math.floor(this.z / 2) - this.height - Math.floor(this.y);
+  var top = Math.floor(this.z / 2) - this.height - Math.floor(this.y);
   this.elem.style.top = top + 'px';
   this.elem.style.left = (this.x) + 'px';
   this.elem.style.zIndex = Math.floor(this.z);
@@ -202,11 +193,11 @@ $.Sprite.prototype.setDirection = function(direction) {
     this.facing = facing;
   }
 
-  // If the canvas width is greater than the Sprite size, it means that the sprite
+  // If the canvas width is greater than the Sprite width, it means that the sprite
   // sheet has multiple appearances or costumes, each which relates to a facing direction.
-  if (this.canvas && (this.canvas.width > this.size)) {
+  if (this.canvas && (this.canvas.width > this.width)) {
     // Adjust the background position to show the correct part of the sprite sheet for the direction.
-    this.backgroundX = (-((this.facing - 1) * this.size));
+    this.backgroundX = (-((this.facing - 1) * this.width));
     this.elem.style.backgroundPosition = this.backgroundX + 'px ' + (this.backgroundY + (~~(this.cell/10) * this.height)) + 'px';
   }
 };
@@ -248,7 +239,7 @@ $.Sprite.prototype.move = function() {
       if ($.Game.userInput) {
         // Check whether a room edge has been hit.
         if (x < 0) edge = 1;
-        if ((x + this.size) > 960) edge = 4;
+        if ((x + this.width) > 960) edge = 4;
         // This edge number is simply to stop ego. He won't leave the room.
         if (z > 667) edge = 5;
       }

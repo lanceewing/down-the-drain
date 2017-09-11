@@ -113,9 +113,9 @@ $.Ego.prototype.hitEdge = function(edge) {
         // Work out the new position for ego.
         switch (edgeData[1]) {
           case 1: // From the left edge of screen
-            this.setPosition(0 - this.size * 2, this.y, 600);
+            this.setPosition(0 - this.width * 2, this.y, 600);
             this.setDirection($.Sprite.RIGHT);
-            this.moveTo(this.size + 50, 600, function() {
+            this.moveTo(this.width + 50, 600, function() {
               $.Game.userInput = true;
             });
             break;
@@ -137,9 +137,9 @@ $.Ego.prototype.hitEdge = function(edge) {
             break;
             
           case 4: // From the right edge of screen
-            this.setPosition(960 + this.size, this.y, 600);
+            this.setPosition(960 + this.width, this.y, 600);
             this.setDirection($.Sprite.LEFT);
-            this.moveTo(960 - this.size - 50, 600, function() {
+            this.moveTo(960 - this.width - 50, 600, function() {
               $.Game.userInput = true;
             });
             break;

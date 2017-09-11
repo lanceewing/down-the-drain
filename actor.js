@@ -6,11 +6,11 @@
  * @constructor
  * @extends Sprite
  */
-$.Actor = function(size, height, colour, texture, xzstep, face, hat, pack) {
+$.Actor = function(width, height, colour, texture, xzstep, face, hat, pack) {
   this.face = face;
   this.hat = hat;
   this.pack = pack;
-  $.Sprite.call(this, size, height, colour, texture, xzstep);
+  $.Sprite.call(this, width, height, colour, texture, xzstep);
   this.elem.classList.add('actor');
 };
 
@@ -19,20 +19,20 @@ $.Actor.prototype.constructor = $.Actor;
 
 /**
  * Builds the background image canvas for the Actor. Ego and Enemy are visually 
- * similar. It is only the colour that differs. The colour, size, and texture
+ * similar. It is only the colour that differs. The colour, width, and texture
  * are already defined on the object as part of the object instantiation.
  */
 $.Actor.prototype.buildCanvas = function() {
   // Create a single canvas to render the sprite sheet for the four directions.
-  var ctx = $.Util.create2dContext(this.size * 4, this.size * 3 * 3);
+  var ctx = $.Util.create2dContext(this.width * 4, this.width * 3 * 3);
   
   // For each direction, render the Actor facing in that direction.
   for (var c = 0; c < 3; c++) {
     for (var d = 0; d < 4; d++) {
       ctx.drawImage(
-          $.Util.renderPerson(this.size, this.size * 3, d, c, this.face, this.colour, this.hat, this.pack), 
-          d * this.size, 
-          c * this.size * 3);
+          $.Util.renderPerson(this.width, this.width * 3, d, c, this.face, this.colour, this.hat, this.pack), 
+          d * this.width, 
+          c * this.width * 3);
     }
   }
   
