@@ -9,11 +9,6 @@ $.Logic = {};
 $.Logic.process = function(verb, cmd, thing, e) {
   var newCommand = cmd;
 
-  // TODO: Individual room logic up here.
-  
-  
-  // Generic logic for all rooms.
-  
   switch (verb) {
   
     case 'Walk to':
@@ -65,6 +60,14 @@ $.Logic.process = function(verb, cmd, thing, e) {
           $.ego.say("It's the Grim Reaper.", 270);
           break;
           
+        case 'man':
+          $.ego.say("He looks a bit sick. He must be living down here.", 300);
+          break;
+          
+        case 'doll':
+          $.ego.say("This thing looks genuinely scary.", 200);
+          break;
+          
         case 'book':
           $.ego.say("It's a book on sewer survival.", 250, function() {
             $.ego.say("Who am I kidding? I'm never going to read this.", 300);
@@ -97,17 +100,63 @@ $.Logic.process = function(verb, cmd, thing, e) {
             $.reaper.say("Finders reapers.", 200);
           });
           break;
+          
+        case 'man':
+          if ($.Game.hasItem('book')) {
+            $.ego.say("Hey, can I have that doll?", 240, function() {
+              $.man.say("No, it's mine.", 200, function() {
+                $.ego.say("Would you like to trade?", 240, function() {
+                  $.man.say("Depends what you've got.", 240);
+                });
+              });
+            });
+          } else if ($.Game.hasItem('doll')) {
+            $.man.say("Thanks again for the book. It's an interesting read.", 240);
+          } else {
+            $.ego.say("Hey, can I have that doll?", 240, function() {
+              $.man.say("Yeah, sure.", 180);
+            });
+          }
+          break;
+          
+        default:
+          $.ego.say("There was no reply.", 220);
+          break;
       }
       break;
   
+    case 'Open':
+      switch (thing) {
+        case 'drain':
+          $.ego.say("They won't budge.", 230);
+          break;
+          
+        case 'door':
+          $.ego.say("It's already open.", 230);
+          break;
+          
+        default:
+          $.ego.say("It doesn't open.", 230);
+          break;
+      }
+      break;
+      
     case 'Give':
       if (cmd == verb) {
         newCommand = 'Give ' + thing + ' to ';
       } else {
         switch (cmd + thing) {
           case 'Give book to man':
-            $.man.say("Thanks! That will be very useful down here.", 250);
+            $.man.say("Thanks! That will be very useful down here.", 270);
             $.Game.dropItem('book');
+            break;
+            
+          case 'Give chocolate coins to man':
+            $.man.say("No thanks. I hate chocolate.", 200);
+            break;
+            
+          default:
+            $.ego.say("I think it said no.", 230);
             break;
         }
         
@@ -121,19 +170,39 @@ $.Logic.process = function(verb, cmd, thing, e) {
       } else {
         switch (thing) {
           case 'doll':
+            $.Game.userInput = false;
             $.ego.moveTo($.ego.cx, 600, function() {
               $.ego.moveTo($.doll.x, 600, function() {
                 if ($.Game.hasItem('book')) {
                   $.man.say("Hey! That's mine!", 200);
                 } else {
-                  $.man.say("Yeah! All yours mate.", 200, function() {
+                  $.man.say("All yours mate.", 200, function() {
                     $.Game.getItem('doll');
                     $.doll.remove();
                     $.Game.props[3][0] = 0;  // Clears the room number for the doll.
+                    $.Game.userInput = true;
                   });
                 }
               });
             });
+            break;
+            
+          case 'blanket':
+            $.man.say("Hey! That's mine!", 220, function() {
+              $.man.say("I'll never part with my blanket.", 200);
+            });
+            break;
+          
+          case 'drain':
+            $.ego.say("They won't budge.", 230);
+            break;
+            
+          case 'water':
+            $.ego.say("I need a container.", 230);
+            break;
+            
+          default:
+            $.ego.say("I can't get that.", 220);
             break;
         
         }

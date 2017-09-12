@@ -75,6 +75,9 @@ $.Actor.prototype.say = function(text, width, next) {
     setTimeout(function() {
       if (next) {
         next();
+      } else {
+        // Re-enable user input if nothing is happening after the speech.
+        $.Game.userInput = true;
       }
     }, 500);
   }, (text.length / 10) * 1500);
