@@ -24,10 +24,10 @@ $.Game = {
    */
   regions: [
     ['Sewers',     1, '108,141,36', '108,141,36'],    // Greenish tint, green water, bricks
-    ['Caves',      1, '0,0,0', '68,136,187'],    // Grey walls, blue water
-    ['Mines',      0, '#000000', ''],           // Brown walls, no water
-    ['Catacombs',  1, '#000000', ''],           // Grey walls, no water, bricks
-    ['Underworld', 0, '255,0,0', '207,16,32'],    // Red tint, lava
+    ['Caves',      1, '0,0,0', '68,136,187'],         // Grey walls, blue water
+    ['Mines',      0, '#000000', ''],                 // Brown walls, no water
+    ['Catacombs',  1, '#000000', ''],                 // Grey walls, no water, bricks
+    ['Underworld', 0, '255,0,0', '207,16,32'],        // Red tint, lava
   ],
   
   /**
@@ -40,15 +40,15 @@ $.Game = {
     [0,       ,       , [3, 1], [1, 2], ''],  // [2]
     [0, [2, 3], [5, 4], [6, 1], [4, 1], ''],  // [3]
     
-    [4, [3, 4],       ,       ,       , ''],  // [4] Grim reaper's throne room.
+    [4, [3, 4],       ,       ,       , ''],  // [4] Grim reaper's room.
     
-    [0, [7, 2],       ,       , [3, 2], ''],  // 5
+    [0, [7, 2],       ,       , [3, 2], ''],  // [5] Long hall
     
-    [0, [7, 2],       ,       , [4, 3], ''],
+    [0, [3, 3],       ,       ,       , ''],  // [6]
     
-    [1,       , [5, 1],       , [8, 1], ''], // [7]
+    [1,       , [5, 1],       , [8, 1], ''],  // [7]
     
-    [1, [7, 4],       ,       ,       , ''], // [8] Homeless man's cave
+    [1, [7, 4],       ,       ,       , ''],  // [8] Homeless man's cave
     
   ],
   
@@ -66,6 +66,8 @@ $.Game = {
     [8, 0, 'doll', 20, 60, 523, 540, null],
     
     [0, 2, 'phone', 15, 6, 800, 600, null, 530],
+    
+    [6, 2, 'book', 25, 10, 475, 560, null, 530],
     
     //[2, 2, 'cupboard', 100, 200, 200, 530, null],
     
@@ -99,6 +101,8 @@ $.Game = {
   thing: '',
   
   itemTop: -1,
+  
+  gameOver: false,
     
   /**
    * Starts the game. 
@@ -162,7 +166,7 @@ $.Game = {
     
     // Set the room back to the start, and clear the object map.
     this.objs = [];
-    this.room = 4;//8;//1;
+    this.room = 1;
     
     // Create Ego (the main character) and add it to the screen.
     $.ego = new $.Ego();
@@ -171,10 +175,6 @@ $.Game = {
     
     // Starting inventory.
     this.getItem('chocolate coins');
-    this.getItem('book');
-    
-    // TODO: Remove next line.
-    this.getItem('doll');
     
     // Enter the starting room.
     this.newRoom();
@@ -305,7 +305,7 @@ $.Game = {
    * 
    */
   processCommand: function(e) {
-    if (this.userInput) {
+    if (this.userInput && !this.gameOver) {
       this.command = $.Logic.process(this.verb, this.command, this.thing, e);
       if (e) e.stopPropagation();
       if (this.command == this.verb) {

@@ -21,6 +21,20 @@ $.Logic.process = function(verb, cmd, thing, e) {
           $.ego.moveTo(e.target.offsetLeft + (e.target.offsetWidth / 2), e.target.offsetTop);
           break;
           
+        case 'open drain':
+          if ($.Game.hasItem('phone')) {
+            $.ego.moveTo(e.target.offsetLeft + (e.target.offsetWidth / 2), $.ego.z, function() {
+                $.ego.moveTo($.ego.x, 540, function() {
+                  $.ego.say("Congratulations!! You've WON that game!",220, function() {
+                    $.Game.gameOver = true;
+                  });
+                });
+            });
+          } else {
+            $.ego.say("I need to find my phone before I leave.", 220);
+          }
+          break;
+          
         default:
           $.ego.stop(true);
           var z = (e.pageY - $.wrap.offsetTop - 27) * 2;
@@ -65,7 +79,7 @@ $.Logic.process = function(verb, cmd, thing, e) {
         case 'phone':
           if ($.Game.hasItem('phone')) {
             $.ego.say("My trusty phone, none the worst for wear.", 220, function() {
-              $.ego.say("Looks like the Reaper made some long distance calls!", 300);
+              $.ego.say("Hey! Looks like the Reaper made some long distance calls!", 300);
             });
           } else {
             $.ego.say("Seems that in his haste, the Grim Reaper dropped my phone.", 300);
@@ -93,9 +107,13 @@ $.Logic.process = function(verb, cmd, thing, e) {
           break;
           
         case 'book':
-          $.ego.say("It's a book on sewer survival.", 250, function() {
-            $.ego.say("Who am I kidding? I'm never going to read this.", 300);
-          });
+          if ($.Game.hasItem('book')) {
+            $.ego.say("It's a book on sewer survival.", 250, function() {
+              $.ego.say("Who am I kidding? I'm never going to read this.", 300);
+            });
+          } else {
+            $.ego.say("Someone must have dropped their book down the drain.", 300);
+          }
           break;
           
         default:
@@ -204,6 +222,14 @@ $.Logic.process = function(verb, cmd, thing, e) {
             $.man.say("No thanks. I hate chocolate.", 200);
             break;
             
+          case 'Give book to reaper':
+            $.reaper.say("I'm immortal. I don't need a survival book.", 300);
+            break;
+            
+          case 'Give chocolate coins to reaper':
+            $.reaper.say("Do not tempt Death!", 300);
+            break;
+            
           case 'Give doll to reaper':
             $.Game.userInput = false;
             $.ego.moveTo($.ego.cx, 600, function() {
@@ -272,10 +298,24 @@ $.Logic.process = function(verb, cmd, thing, e) {
             $.ego.say("They won't budge.", 230);
             break;
             
+          case 'book':
+            $.ego.moveTo($.ego.cx, 600, function() {
+              $.ego.moveTo($.book.x, 600, function() {
+                $.Game.getItem('book');
+                $.book.remove();
+                $.Game.props[5][0] = 0;  // Clears the room number for the book.
+              });
+            });
+            break;
+            
           case 'phone':
-            $.Game.getItem('phone');
-            $.phone.remove();
-            $.Game.props[4][0] = 0;  // Clears the room number for the phone.
+            $.ego.moveTo($.ego.cx, 600, function() {
+              $.ego.moveTo($.phone.x, 600, function() {
+                $.Game.getItem('phone');
+                $.phone.remove();
+                $.Game.props[4][0] = 0;  // Clears the room number for the phone.
+              });
+            });
             break;
             
           case 'water':
