@@ -115,6 +115,7 @@ $.Game = {
     $.score = document.getElementById('score');
     $.items = document.getElementById('itemlist');
     $.sentence = document.getElementById('sentence');
+    $.controls = document.getElementById('controls');
     
     // Render the wall texture.
     this.wall = this.renderWall();
