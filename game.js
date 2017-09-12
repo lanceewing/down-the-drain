@@ -225,7 +225,11 @@ $.Game = {
     this.updateObjects();
     
     // Update sentence.
-    $.sentence.innerHTML = this.command + ' ' + this.thing;
+    if (!this.gameOver) {
+      $.sentence.innerHTML = this.command + ' ' + this.thing;
+    } else {
+      $.sentence.innerHTML = 'Game Over';
+    }
     
     // If after updating all objects, the room that Ego says it is in is different
     // than what it was previously in, then we trigger entry in to the new room.

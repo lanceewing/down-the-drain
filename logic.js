@@ -28,6 +28,7 @@ $.Logic.process = function(verb, cmd, thing, e) {
                   $.Game.addToScore(20);
                   $.ego.say("Congratulations!! You've WON that game!",220, function() {
                     $.Game.gameOver = true;
+                    $.Game.fadeOut($.controls);
                   });
                 });
             });
