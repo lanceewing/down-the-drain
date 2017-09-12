@@ -116,17 +116,27 @@ $.Logic.process = function(verb, cmd, thing, e) {
       break;
       
     case 'Pick up':
-      switch (thing) {
-        case 'doll':
-          if ($.Game.hasItem('book')) {
-            $.ego.say("The man won't let me.", 270);
-          } else {
-            $.Game.getItem('doll');
-            $.screen.removeChild($.doll);
-            // TODO: Need boolean in props to say whether it is still on screen or not.
-          }
-          break;
-      
+      if ($.Game.hasItem(thing)) {
+        $.ego.say("I already have that.", 140);
+      } else {
+        switch (thing) {
+          case 'doll':
+            $.ego.moveTo($.ego.cx, 600, function() {
+              $.ego.moveTo($.doll.x, 600, function() {
+                if ($.Game.hasItem('book')) {
+                  $.man.say("Hey! That's mine!", 200);
+                } else {
+                  $.man.say("Yeah! All yours mate.", 200, function() {
+                    $.Game.getItem('doll');
+                    $.doll.remove();
+                    $.Game.props[3][0] = 0;  // Clears the room number for the doll.
+                  });
+                }
+              });
+            });
+            break;
+        
+        }
       }
       break;
       

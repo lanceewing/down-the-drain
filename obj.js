@@ -53,7 +53,11 @@ $.Obj.prototype.add = function() {
  * Removes this Obj from the current room.
  */
 $.Obj.prototype.remove = function() {
-  $.screen.removeChild(this.elem);
+  try {
+    $.screen.removeChild(this.elem);
+  } catch (e) {
+    // Ignore. We don't care if it has already been removed.
+  }
 };
 
 /**

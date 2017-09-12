@@ -63,7 +63,7 @@ $.Game = {
     
     [8, 2, 'blanket', 160, 15, 400, 550, null, 530],
     
-    [8, 0, 'doll', 20, 60, 523, 540, null, , 0],
+    [8, 0, 'doll', 20, 60, 523, 540, null],
     
     
     //[2, 2, 'cupboard', 100, 200, 200, 530, null],
@@ -327,13 +327,13 @@ $.Game = {
     
     // Room 1 has an open drain for entry and exit.
     if (this.room == 1) {
-      $.drains[2].className = 'open drain'; //classList.add('entry');
+      $.drains[2].className = 'open drain';
     } else {
-      $.drains[2].className = 'drain'; //classList.remove('entry');
+      $.drains[2].className = 'drain';
     }
     
     // Update the region name.
-    $.region.innerHTML = 'Down the Drain'; //'In the ' + this.region[0];
+    $.region.innerHTML = 'Down the Drain';
     
     // Draw the bricks if the region has them.
     if (this.region[1]) {
