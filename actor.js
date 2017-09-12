@@ -84,3 +84,46 @@ $.Actor.prototype.say = function(text, width, next) {
     }, 500);
   }, (text.length / 10) * 1500);
 };
+
+$.Actor.prototype.update = function() {
+  // Mask out left/right/in/out but retain the current jumping directions.
+  var direction;
+  
+  if ((this.destX != -1) && (this.destZ != -1)) {
+    if (this.touching({cx: this.destX, cy: this.cy, z: this.destZ, radius: -this.radius}, 20)) {
+      // We've reached the destination.
+      this.stop();
+    
+    } else {
+      this.heading = Math.atan2(this.destZ - this.z, this.destX - this.cx);
+      
+      // Cycle cell
+      this.cell = ((this.cell + 1) % 30);
+    }
+  } else if (this.dests.length > 0) {
+    // If there is a destination position waiting for ego to move to, pop it now.
+    var pos = this.dests.shift();
+    this.destZ = pos.z
+    this.destX = pos.x;
+    this.destFn = pos.fn;
+  }
+  
+  if (this.heading !== null) {
+    // Convert the heading to a direction value.
+    if (Math.abs(this.heading) > 2.356) {
+      direction |= $.Sprite.LEFT;
+    } else if (Math.abs(this.heading) < 0.785) {
+      direction |= $.Sprite.RIGHT;
+    } else if (this.heading > 0) {
+      direction |= $.Sprite.OUT;
+    } else {
+      direction |= $.Sprite.IN;
+    }
+  }
+  
+  // Update Ego's direction to what was calculated above.
+  this.setDirection(direction);
+  
+  // Move Ego based on it's heading.
+  if (this.heading !== null) this.move();
+};

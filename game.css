@@ -247,17 +247,11 @@ span {
 	width: 20px;
 	heigth: 6px;
 }
-#cupboard {
-	background-color: rgb(233,223,196);
-}
 #blanket {
-	
 	background-color: #520116;
 	border: 3px solid black;
-	
-	/*
-	border-bottom: 15px solid #800020;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  */
+}
+#phone {
+	background-color: silver;
+	border: 2px solid black;
 }

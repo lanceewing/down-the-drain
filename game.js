@@ -65,10 +65,11 @@ $.Game = {
     
     [8, 0, 'doll', 20, 60, 523, 540, null],
     
+    [0, 2, 'phone', 15, 6, 800, 600, null, 530],
     
     //[2, 2, 'cupboard', 100, 200, 200, 530, null],
     
-    /*
+    /* Things I hoped to add to the game.
     'fishing pole',
     'eel flashlight',
     'poisoned rat',
@@ -76,11 +77,9 @@ $.Game = {
     'wine bottle',
     'empty bottle',
     'old batteries',
-    //'chocolate coins',
     'vinyl tape',
     'pipe',
     'lighter',
-    //'book',
     'suit of armour',
     'worm',
     'nylon string',
@@ -163,7 +162,7 @@ $.Game = {
     
     // Set the room back to the start, and clear the object map.
     this.objs = [];
-    this.room = 8;//1;
+    this.room = 4;//8;//1;
     
     // Create Ego (the main character) and add it to the screen.
     $.ego = new $.Ego();
@@ -173,6 +172,9 @@ $.Game = {
     // Starting inventory.
     this.getItem('chocolate coins');
     this.getItem('book');
+    
+    // TODO: Remove next line.
+    this.getItem('doll');
     
     // Enter the starting room.
     this.newRoom();
@@ -365,75 +367,83 @@ $.Game = {
       
       // Is this prop in the current room?
       if (prop[0] == this.room) {
-        var obj;
-        
-        // We cache the obj when it isn't in the dom rather than recreate. It might remember it's state.
-        obj = prop[7];
-        
-        if (!obj) {
-          // Switch on the type of prop
-          switch (prop[1]) {
-            case 0: // Actor
-              switch (prop[2]) {
-                case 'reaper':
-                  obj = new $.Actor(prop[3], prop[4], 'black', 0.95, 5, 'black');
-                  obj.setDirection($.Sprite.OUT);
-                  break;
-                case 'man':
-                  obj = new $.Actor(prop[3], prop[4], '#614126', 0.95, 5, '#ccffcc', '#926239');
-                  obj.setDirection($.Sprite.OUT);
-                  break;
-                case 'doll':
-                  obj = new $.Actor(prop[3], prop[4], '#111', 0.95, 5, '#111');
-                  obj.setDirection($.Sprite.OUT);
-                  break;
-                case 'engineer':
-                  break;
-              }
-              $[prop[2]] = obj;
-              obj.setPosition(prop[5], 0, prop[6]);
-              break;
-              
-            case 1: // Item
-              break;
-              
-            case 2: // Prop
-              obj = new $.Obj(prop[3], prop[4], prop[8]);
-              break;
-          }
-          
-          obj.elem.id = prop[2];
-          obj.add();
-          obj.setPosition(prop[5], 0, prop[6]);
-          prop[7] = obj;
-        }
-        else {
-          obj.add();
-        }
-        
-        this.objs.push(obj);
+        this.addPropToRoom(prop);
       }
     }
     
     // Add event listeners for objects in the room.
     var screenObjs = $.screen.children;
     for (var i=0; i<screenObjs.length; i++) {
-      // It is important that we don't use addEventListener in this case. We need to overwrite
-      // the event handler on entering each room.
-      screenObjs[i].onmouseenter = function(e) {
-        $.Game.thing = (e.target.id? e.target.id : e.target.className);
-      };
-      screenObjs[i].onmouseleave = function(e) {
-        $.Game.thing = '';
-      };
-      screenObjs[i].onclick = function(e) {
-        $.Game.thing = (e.target.id? e.target.id : e.target.className);
-        $.Game.processCommand(e);
-      };
+      this.addObjEventListeners(screenObjs[i]);
     }
     
     $.Game.fadeIn($.screen);
     $.ego.show();
+  },
+  
+  addPropToRoom: function(prop) {
+    var obj;
+    
+    // We cache the obj when it isn't in the dom rather than recreate. It might remember it's state.
+    obj = prop[7];
+    
+    if (!obj) {
+      // Switch on the type of prop
+      switch (prop[1]) {
+        case 0: // Actor
+          switch (prop[2]) {
+            case 'reaper':
+              obj = new $.Actor(prop[3], prop[4], 'black', 0.95, 10, 'black');
+              obj.setDirection($.Sprite.OUT);
+              break;
+            case 'man':
+              obj = new $.Actor(prop[3], prop[4], '#614126', 0.95, 5, '#ccffcc', '#926239');
+              obj.setDirection($.Sprite.OUT);
+              break;
+            case 'doll':
+              obj = new $.Actor(prop[3], prop[4], '#111', 0.95, 5, '#111');
+              obj.setDirection($.Sprite.OUT);
+              break;
+            case 'engineer':
+              break;
+          }
+          obj.setPosition(prop[5], 0, prop[6]);
+          break;
+          
+        case 1: // Item
+          break;
+          
+        case 2: // Prop
+          obj = new $.Obj(prop[3], prop[4], prop[8]);
+          break;
+      }
+      
+      $[prop[2]] = obj;
+      obj.elem.id = prop[2];
+      obj.add();
+      obj.setPosition(prop[5], 0, prop[6]);
+      prop[7] = obj;
+    }
+    else {
+      obj.add();
+    }
+    
+    this.objs.push(obj);
+  },
+  
+  addObjEventListeners: function(elem) {
+    // It is important that we don't use addEventListener in this case. We need to overwrite
+    // the event handler on entering each room.
+    elem.onmouseenter = function(e) {
+      $.Game.thing = (e.target.id? e.target.id : e.target.className);
+    };
+    elem.onmouseleave = function(e) {
+      $.Game.thing = '';
+    };
+    elem.onclick = function(e) {
+      $.Game.thing = (e.target.id? e.target.id : e.target.className);
+      $.Game.processCommand(e);
+    };
   },
   
   getItem: function(name) {

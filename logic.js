@@ -61,6 +61,16 @@ $.Logic.process = function(verb, cmd, thing, e) {
             $.ego.say("I wouldn't be able to see down here without it.", 200);
           });
           break;
+        
+        case 'phone':
+          if ($.Game.hasItem('phone')) {
+            $.ego.say("My trusty phone, none the worst for wear.", 220, function() {
+              $.ego.say("Looks like the Reaper made some long distance calls!", 300);
+            });
+          } else {
+            $.ego.say("Seems that in his haste, the Grim Reaper dropped my phone.", 300);
+          }
+          break;
           
         case 'chocolate coins':
           $.ego.say("What? I get hungry.", 250);
@@ -194,6 +204,28 @@ $.Logic.process = function(verb, cmd, thing, e) {
             $.man.say("No thanks. I hate chocolate.", 200);
             break;
             
+          case 'Give doll to reaper':
+            $.Game.userInput = false;
+            $.ego.moveTo($.ego.cx, 600, function() {
+              $.ego.moveTo($.reaper.x, 600, function() {
+                $.reaper.moveTo($.reaper.x + 200, 600, function() {
+                  $.reaper.setDirection($.Sprite.LEFT);
+                  $.reaper.say("Get that thing away from me!!", 300, function() {
+                    $.Game.fadeOut($.reaper.elem);
+                    $.reaper.moveTo(850, 600, function() {
+                      $.Game.props[0][0] = 0;
+                      $.Game.props[4][0] = 4;
+                      $.Game.addPropToRoom($.Game.props[4]);
+                      $.Game.addObjEventListeners($.Game.props[4][7].elem);
+                      $.reaper.remove();
+                      $.ego.say("Whoa! He didn't like that.", 300);
+                    });
+                  })
+                })
+              });
+            });
+            break;
+            
           default:
             if (thing == 'me') {
               $.ego.say("You lost me at 'Give'", 260);
@@ -238,6 +270,12 @@ $.Logic.process = function(verb, cmd, thing, e) {
           
           case 'drain':
             $.ego.say("They won't budge.", 230);
+            break;
+            
+          case 'phone':
+            $.Game.getItem('phone');
+            $.phone.remove();
+            $.Game.props[4][0] = 0;  // Clears the room number for the phone.
             break;
             
           case 'water':

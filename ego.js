@@ -25,7 +25,7 @@ $.Ego.prototype.constructor = $.Ego;
  */
 $.Ego.prototype.update = function() {
   // Mask out left/right/in/out but retain the current jumping directions.
-  var direction = (this.direction & $.Sprite.UP_DOWN);
+  var direction;
   
   if ((this.destX != -1) && (this.destZ != -1)) {
 	  if (this.touching({cx: this.destX, cy: this.cy, z: this.destZ, radius: -this.radius}, 20)) {
@@ -64,9 +64,6 @@ $.Ego.prototype.update = function() {
   
   // Move Ego based on it's heading.
   if (this.heading !== null) this.move();
-
-  // The hit method sets the bounce flag, and it is cleared here.
-  this.bounce = false;
 };
 
 /**
@@ -75,10 +72,6 @@ $.Ego.prototype.update = function() {
  * @param obj The Sprite that Ego has hit.
  */
 $.Ego.prototype.hit = function(obj) {
-  // This flag is set so that the update method knows in an efficient way that 
-  // Ego is currently touching something. 
-  this.bounce = true;
-  
   // Reset the position to the last one that isn't touching another Sprite. Resetting
   // the position prevents Ego from walking through obstacles. 
   for (;this.reset() && this.touching(obj););
