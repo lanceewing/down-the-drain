@@ -25,6 +25,7 @@ $.Logic.process = function(verb, cmd, thing, e) {
           if ($.Game.hasItem('phone')) {
             $.ego.moveTo(e.target.offsetLeft + (e.target.offsetWidth / 2), $.ego.z, function() {
                 $.ego.moveTo($.ego.x, 540, function() {
+                  $.Game.addToScore(20);
                   $.ego.say("Congratulations!! You've WON that game!",220, function() {
                     $.Game.gameOver = true;
                   });
@@ -216,6 +217,7 @@ $.Logic.process = function(verb, cmd, thing, e) {
           case 'Give book to man':
             $.man.say("Thanks! That will be very useful down here.", 270);
             $.Game.dropItem('book');
+            $.Game.addToScore(76);
             break;
             
           case 'Give chocolate coins to man':
@@ -245,6 +247,7 @@ $.Logic.process = function(verb, cmd, thing, e) {
                       $.Game.addObjEventListeners($.Game.props[4][7].elem);
                       $.reaper.remove();
                       $.ego.say("Whoa! He didn't like that.", 300);
+                      $.Game.addToScore(84);
                     });
                   })
                 })
@@ -282,6 +285,7 @@ $.Logic.process = function(verb, cmd, thing, e) {
                     $.doll.remove();
                     $.Game.props[3][0] = 0;  // Clears the room number for the doll.
                     $.Game.userInput = true;
+                    $.Game.addToScore(20);
                   });
                 }
               });
@@ -304,6 +308,7 @@ $.Logic.process = function(verb, cmd, thing, e) {
                 $.Game.getItem('book');
                 $.book.remove();
                 $.Game.props[5][0] = 0;  // Clears the room number for the book.
+                $.Game.addToScore(15);
               });
             });
             break;
@@ -314,6 +319,7 @@ $.Logic.process = function(verb, cmd, thing, e) {
                 $.Game.getItem('phone');
                 $.phone.remove();
                 $.Game.props[4][0] = 0;  // Clears the room number for the phone.
+                $.Game.addToScore(15);
               });
             });
             break;

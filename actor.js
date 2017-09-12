@@ -1,7 +1,6 @@
 /**
  * Creates a new Actor, a special type of Sprite that is rendered differently 
- * depending on what direction it is moving. Not instantiated directly, but 
- * rather extended by Ego and Enemy.
+ * depending on what direction it is moving. 
  * 
  * @constructor
  * @extends Sprite
@@ -18,9 +17,7 @@ $.Actor.prototype = Object.create($.Sprite.prototype);
 $.Actor.prototype.constructor = $.Actor;
 
 /**
- * Builds the background image canvas for the Actor. Ego and Enemy are visually 
- * similar. It is only the colour that differs. The colour, width, and texture
- * are already defined on the object as part of the object instantiation.
+ * Builds the background image canvas for the Actor. 
  */
 $.Actor.prototype.buildCanvas = function() {
   // Create a single canvas to render the sprite sheet for the four directions.
@@ -39,6 +36,11 @@ $.Actor.prototype.buildCanvas = function() {
   return ctx.canvas;
 };
 
+/**
+ * Tells the Actor to stop moving. If fully is not provided, and there are pending destination
+ * points, then the Actor will start moving to the next point. If fully is set to true then 
+ * all pending destination points are cleared.
+ */
 $.Actor.prototype.stop = function(fully) {
   // Clear the current destination.
   this.destX = this.destZ = -1;
@@ -54,10 +56,17 @@ $.Actor.prototype.stop = function(fully) {
   if (fully) this.dests = [];
 };
 
+/**
+ * Tells the Actor to move to the given position on the screen.
+ */
 $.Actor.prototype.moveTo = function(x, z, fn) {
   this.dests.push({z: z, x: x, fn: fn});
 };
 
+/**
+ * Tells the Actor to say the given text within a speech bubble of the given width. Will
+ * execute the given optional next function if provided after the speech bubble is removed.
+ */
 $.Actor.prototype.say = function(text, width, next) {
   $.Game.userInput = false;
   
@@ -85,6 +94,9 @@ $.Actor.prototype.say = function(text, width, next) {
   }, (text.length / 10) * 1500);
 };
 
+/**
+ * Updates the Actor's position based on its current heading and destination point.
+ */
 $.Actor.prototype.update = function() {
   // Mask out left/right/in/out but retain the current jumping directions.
   var direction;

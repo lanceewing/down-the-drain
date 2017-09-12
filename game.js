@@ -1,6 +1,6 @@
 /**
  * The is the core Game object that manages the starting of the game loop and the
- * core functions of the game that don't relate directly to an individual Sprite.
+ * core functions of the game that don't relate directly to an individual screen object.
  */
 $.Game = {
 
@@ -15,7 +15,7 @@ $.Game = {
   delta: 0,
   
   /**
-   * 
+   * Whether or not the user currently has control.
    */
   userInput: true,
   
@@ -35,23 +35,15 @@ $.Game = {
    * door are handled as props), name override.
    */
   rooms: [
-
     [0,       , [2, 4], ,             , ''],  // [1] Entrance room.
     [0,       ,       , [3, 1], [1, 2], ''],  // [2]
     [0, [2, 3], [5, 4], [6, 1], [4, 1], ''],  // [3]
-    
     [4, [3, 4],       ,       ,       , ''],  // [4] Grim reaper's room.
-    
     [0, [7, 2],       ,       , [3, 2], ''],  // [5] Long hall
-    
     [0, [3, 3],       ,       ,       , ''],  // [6]
-    
     [1,       , [5, 1],       , [8, 1], ''],  // [7]
-    
     [1, [7, 4],       ,       ,       , ''],  // [8] Homeless man's cave
-    
   ],
-  
   
   props: [
     
@@ -89,7 +81,6 @@ $.Game = {
     'nails',
     'mop'
     */
-    
   ],
   
   inventory: {},
@@ -103,6 +94,8 @@ $.Game = {
   itemTop: -1,
   
   gameOver: false,
+  
+  score: 0,
     
   /**
    * Starts the game. 
@@ -180,24 +173,24 @@ $.Game = {
     this.newRoom();
     
     // Intro text.
-    //    this.userInput = false;
-    //    this.say('Hello!!', 100, function() {
-    //      $.Game.say('My name is Pip.', 200, function() {
-    //        $.Game.say('I accidentally dropped my phone down a curbside drain...   Duh!!', 300, function() {
-    //          $.ego.moveTo(600, 600, function() {
-    //            $.Game.say('I climbed down here through that open drain to search for it.', 300, function() {
-    //              $.ego.moveTo(600, 640, function() {
-    //                $.Game.say('Unfortunately this is blocks away from where it fell in.', 300, function() {
-    //                  $.Game.say('Please help me to find it down here.', 200, function() {
-    //                    $.Game.userInput = true;
-    //                  });
-    //                });
-    //              });
-    //            });
-    //          });
-    //        });
-    //      });
-    //    });
+    this.userInput = false;
+    $.ego.say('Hello!!', 100, function() {
+      $.ego.say('My name is Pip.', 200, function() {
+        $.ego.say('I accidentally dropped my phone down a curbside drain...   Duh!!', 300, function() {
+          $.ego.moveTo(600, 600, function() {
+            $.ego.say('I climbed down here through that open drain to search for it.', 300, function() {
+              $.ego.moveTo(600, 640, function() {
+                $.ego.say('Unfortunately this is blocks away from where it fell in.', 300, function() {
+                  $.ego.say('Please help me to find it down here.', 200, function() {
+                    $.Game.userInput = true;
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
     
     // Fade in the whole screen at the start.
     this.fadeIn($.wrap);
@@ -302,7 +295,15 @@ $.Game = {
   },
   
   /**
-   * 
+   * Adds the given points to the current score.
+   */
+  addToScore: function(points) {
+    this.score += points;
+    $.score.innerHTML = '' + points + ' of 230';
+  },
+  
+  /**
+   * Processes the current user interaction.
    */
   processCommand: function(e) {
     if (this.userInput && !this.gameOver) {
@@ -318,7 +319,7 @@ $.Game = {
    * Invoked when Ego is entering a room.  
    */
   newRoom: function() {
-    // Remove the previous room's Sprites from the screen.
+    // Remove the previous room's Objs from the screen.
     for (i=0; i<this.objs.length; i++) {
       this.objs[i].remove();
     }
@@ -381,6 +382,9 @@ $.Game = {
     $.ego.show();
   },
   
+  /**
+   * Adds the given prop to the current room screen.
+   */
   addPropToRoom: function(prop) {
     var obj;
     
@@ -431,6 +435,10 @@ $.Game = {
     this.objs.push(obj);
   },
   
+  /**
+   * Adds the necessarily event listens to the given element to allow it to be 
+   * interacted with as an object in the current room.
+   */
   addObjEventListeners: function(elem) {
     // It is important that we don't use addEventListener in this case. We need to overwrite
     // the event handler on entering each room.
@@ -446,6 +454,9 @@ $.Game = {
     };
   },
   
+  /**
+   * Adds the given item to the inventory.
+   */
   getItem: function(name) {
     var item = document.createElement('span');
     item.innerHTML = name;
@@ -465,18 +476,26 @@ $.Game = {
     this.inventory[name] = item;
   },
   
+  /**
+   * Checks if the given item is in the inventory.
+   */
   hasItem: function(name) {
     return this.inventory.hasOwnProperty(name);
   },
   
+  /**
+   * Removes the given item from the inventory.
+   */
   dropItem: function(name) {
     var item = this.inventory[name];
     $.items.removeChild(item);
     delete this.inventory[name];
   },
   
+  /**
+   * Handles scrolling of the inventory list.
+   */
   scrollInv: function(dir) {
-    // TODO: Handle mouse button held down and multiple invocations of this function.
     var newTop = this.itemTop + (27 * dir);
     var invCount = $.items.children.length;
     if ((newTop <= -1) && (newTop > -((this.invCount - 4) * 27))) {
