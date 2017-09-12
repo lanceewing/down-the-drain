@@ -216,9 +216,14 @@ $.Logic.process = function(verb, cmd, thing, e) {
       } else {
         switch (cmd + thing) {
           case 'Give book to man':
-            $.man.say("Thanks! That will be very useful down here.", 270);
-            $.Game.dropItem('book');
-            $.Game.addToScore(76);
+            $.Game.userInput = false;
+            $.ego.moveTo($.ego.cx, 600, function() {
+              $.ego.moveTo($.man.x, 600, function() {
+                $.man.say("Thanks! That will be very useful down here.", 300);
+                $.Game.dropItem('book');
+                $.Game.addToScore(76);
+              });
+            });
             break;
             
           case 'Give chocolate coins to man':
