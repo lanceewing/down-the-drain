@@ -41,6 +41,20 @@ $.Logic.process = function(verb, cmd, thing, e) {
             $.ego.say("Seems a bit high now.", 250);
           });
           break;
+        
+        case 'water':
+          switch ($.Game.region[0]) {
+            case 'Sewers':
+              $.ego.say("Looks like raw sewerage.", 270);
+              break;
+            case 'Underworld':
+              $.ego.say("Looks like lava to me.", 270);
+              break;
+            default:
+              $.ego.say("Must be storm water.", 250);
+              break;
+          }
+          break;
           
         case 'drain':
           $.ego.say("Sunlight shines down through the drain.", 200, function() {
@@ -119,6 +133,10 @@ $.Logic.process = function(verb, cmd, thing, e) {
           }
           break;
           
+        case 'me':
+          $.ego.say("Isn't that what I'm doing?", 150);
+          break;
+          
         default:
           $.ego.say("There was no reply.", 220);
           break;
@@ -141,6 +159,27 @@ $.Logic.process = function(verb, cmd, thing, e) {
       }
       break;
       
+    case 'Close':
+      switch (thing) {
+        case 'door':
+          $.ego.say("It's just a hole, not a proper door.", 220);
+          break;
+          
+        default:
+          $.ego.say("It doesn't close.", 220);
+          break;
+      }
+      break;
+      
+    case 'Use':
+      if (cmd == verb) {
+        newCommand = 'Use ' + thing + ' with ';
+      } else {
+        $.ego.say("Nothing happened.", 220);
+        newCommand = verb;
+      }
+      break;
+      
     case 'Give':
       if (cmd == verb) {
         newCommand = 'Give ' + thing + ' to ';
@@ -156,7 +195,11 @@ $.Logic.process = function(verb, cmd, thing, e) {
             break;
             
           default:
-            $.ego.say("I think it said no.", 230);
+            if (thing == 'me') {
+              $.ego.say("You lost me at 'Give'", 260);
+            } else {
+              $.ego.say("I think it said no.", 230);
+            }
             break;
         }
         
@@ -208,7 +251,10 @@ $.Logic.process = function(verb, cmd, thing, e) {
         }
       }
       break;
-      
+
+    default:
+      $.ego.say("Nothing happened.", 220);
+      break;
   }
   
   return newCommand;

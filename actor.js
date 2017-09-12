@@ -59,6 +59,8 @@ $.Actor.prototype.moveTo = function(x, z, fn) {
 };
 
 $.Actor.prototype.say = function(text, width, next) {
+  $.Game.userInput = false;
+  
   var bubble = document.createElement('span');
   bubble.className = 'bubble';
   bubble.innerHTML = text;
