@@ -39,11 +39,10 @@ $.Sprite.prototype = Object.create($.Obj.prototype);
 $.Sprite.prototype.constructor = $.Obj;
 
 /**
- * Builds the background image canvas for this Sprite. This is the default implementation,
- * which renders a sphere using the colour and texture of the Sprite.
+ * Builds the background image canvas for this Sprite.
  */
 $.Sprite.prototype.buildCanvas = function() {
-  return $.Util.renderSphere(this.width, -1, this.colour, this.texture);
+  // Default implementation does nothing. Sub-classes need to implement.
 };
 
 /**
@@ -68,17 +67,6 @@ $.Sprite.prototype.touching = function(obj, gap) {
 };
 
 /**
- * Calculates the distance between this Sprite and the given Sprite.
- *
- * @param {Sprite} obj The Sprite to calculate the distance to.
- */
-$.Sprite.prototype.distance = function(obj) {
-  var dx = this.cx - obj.cx;
-  var dz = this.cz - obj.cz;
-  return Math.sqrt((dx * dx) + (dz * dz));
-};
-
-/**
  * Resets this Sprite's position to its previous position.
  */
 $.Sprite.prototype.reset = function() {
@@ -94,15 +82,6 @@ $.Sprite.prototype.reset = function() {
   this.step = 1;
   
   return pos;
-};
-
-/**
- * Returns the Sprite's previous position.
- *
- * @returns {number} The Sprites previous position.
- */
-$.Sprite.prototype.lastPosition = function() {
-  return this.positions[this.positions.length-1];
 };
 
 /**
@@ -170,21 +149,6 @@ $.Sprite.prototype.setDirection = function(direction) {
     this.backgroundX = (-((this.facing - 1) * this.width));
     this.elem.style.backgroundPosition = this.backgroundX + 'px ' + (this.backgroundY + (~~(this.cell/10) * this.height)) + 'px';
   }
-};
-
-/**
- * Gets the last direction, excluding UP and DOWN. This can come from different sources. If the 
- * direction is currently set, then it comes from there. If not then it will come from 
- * directionLast, which usually stores the last direction. But if this is also clear, then 
- * the direction is calculated from the facing direction.
- *
- * @returns {number} The Sprite's last direction.
- */
-$.Sprite.prototype.getLastDirection = function() {
-  var dir = (this.direction & 0x0F);
-  if (!dir) dir = (this.directionLast & 0x0F);
-  if (!dir) dir = (1 << (this.facing - 1));
-  return dir;
 };
 
 /**

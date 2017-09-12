@@ -37,7 +37,9 @@ $.Util.create2dContext = function(w, h) {
 };
 
 /**
- * 
+ * Draws a person background sprite image. This includes the four different directions,
+ * and three different cycles of moving in that direction. The parameters allow different
+ * size persons to be drawn, of different clours, and with different features.
  */
 $.Util.renderPerson = function(w, h, direction, c, face, clothes, hat, pack) {
   var ctx = $.Util.create2dContext(w, h + (w / 10));
@@ -130,68 +132,3 @@ $.Util.renderPerson = function(w, h, direction, c, face, clothes, hat, pack) {
   
   return ctx.canvas;
 };
-
-/**
- * 
- * 
- * @param {number} size
- * @param {number} direction
- * @param {string} colour
- * @param {number} texture
- * @param {string} eye
- */
-$.Util.renderSphere = function(size, direction, colour, texture, eye) {
-  var ctx = $.Util.create2dContext(size, size);
-  
-  // Draw the sphere itself. The colour determines the base colour of the
-  // sphere. It is filled with a radial gradient so as to appear spherical.
-  var cx = size / 2;
-  var cy = size / 10;
-  var grd = ctx.createRadialGradient(cx, cy, size/10, cx, cy, size * 0.95);
-  grd.addColorStop(0, colour);
-  grd.addColorStop(1, '#000000');
-  ctx.fillStyle = grd;
-  $.Util.fillCircle(ctx, 0, 0, size);
-  
-  // If the texture parameter is defined, it is used randomly adjust ever
-  // pixel in the drawn sphere. The texture value is either multiplied with
-  // the rgb components, or it the rgb components are divided by it. This
-  // adjusts the brightness of the colour and creates a textured or speckled
-  // look, as seen with the Rock, Enemy and Ego.
-  if (texture) {
-    var imgData = ctx.getImageData(0, 0, size, size);
-    for (var i=0; i<imgData.data.length; i+=4) {
-      if (Math.random() < 0.5) {
-        imgData.data[i]=Math.floor(imgData.data[i] * texture);
-        imgData.data[i+1]=Math.floor(imgData.data[i+1] * texture);
-        imgData.data[i+2]=Math.floor(imgData.data[i+2] * texture);
-      } else {
-        imgData.data[i]=Math.floor(imgData.data[i] / texture);
-        imgData.data[i+1]=Math.floor(imgData.data[i+1] / texture);
-        imgData.data[i+2]=Math.floor(imgData.data[i+2] / texture);
-      }
-    }
-    ctx.putImageData(imgData,0,0);
-  }
-  
-  var eyeFactor = size / 50;
-  
-  // Draw left eye.
-  if ((direction == 4) || (direction == 1)) {
-    ctx.fillStyle="white";
-    $.Util.fillCircle(ctx, 8 * eyeFactor, 12 * eyeFactor, 13 * eyeFactor);
-    ctx.fillStyle=(eye || colour);
-    $.Util.fillCircle(ctx, 10 * eyeFactor, 14 * eyeFactor, 9 * eyeFactor);
-  }
-  
-  // Draw right eye.
-  if ((direction == 4) || (direction == 2)) {
-    ctx.fillStyle="white";
-    $.Util.fillCircle(ctx, 29 * eyeFactor, 12 * eyeFactor, 13 * eyeFactor);
-    ctx.fillStyle=(eye || colour);
-    $.Util.fillCircle(ctx, 31 * eyeFactor, 14 * eyeFactor, 9 * eyeFactor);
-  }
-  
-  return ctx.canvas;
-};
-
