@@ -73,8 +73,18 @@ $.Actor.prototype.say = function(text, width, next) {
   var bubble = document.createElement('span');
   bubble.className = 'bubble';
   bubble.innerHTML = text;
+  
+  var left;
+  if (this.x > 800) {
+    left = -width + 40;
+  } else if (this.x < 100) {
+    left = -10;
+  } else {
+    left = -(width / 2);
+  }
+  
   bubble.style.width = width + 'px';
-  bubble.style.left = -(width / 2) + 'px';
+  bubble.style.left = left + 'px';
   
   var elem = this.elem;
   elem.appendChild(bubble);
