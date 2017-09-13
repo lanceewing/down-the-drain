@@ -27,7 +27,7 @@ $.Game = {
     ['Caves',      1, '0,0,0', '68,136,187'],         // Grey walls, blue water
     ['Mines',      0, '#000000', ''],                 // Brown walls, no water
     ['Catacombs',  1, '#000000', ''],                 // Grey walls, no water, bricks
-    ['Underworld', 0, '255,0,0', '207,16,32'],        // Red tint, lava
+    ['Underworld', 0, '255,0,0', '207,16,32']         // Red tint, lava
   ],
   
   /**
@@ -42,7 +42,7 @@ $.Game = {
     [0, [7, 2],       ,       , [3, 2], ''],  // [5] Long hall
     [0, [3, 3],       ,       ,       , ''],  // [6]
     [1,       , [5, 1],       , [8, 1], ''],  // [7]
-    [1, [7, 4],       ,       ,       , ''],  // [8] Homeless man's cave
+    [1, [7, 4],       ,       ,       , '']   // [8] Homeless man's cave
   ],
   
   props: [
@@ -59,7 +59,7 @@ $.Game = {
     
     [0, 2, 'phone', 15, 6, 800, 600, null, 530],
     
-    [6, 2, 'book', 25, 10, 475, 560, null, 530],
+    [6, 2, 'book', 25, 10, 475, 560, null, 530] 
     
     //[2, 2, 'cupboard', 100, 200, 200, 530, null],
     
