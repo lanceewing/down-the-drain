@@ -102,7 +102,7 @@ $.Game = {
    */
   start: function() {
     // Get a reference to each of the elements in the DOM that we'll need to update.
-	  $.wrap = document.getElementById('wrap');
+    $.wrap = document.getElementById('wrap');
     $.screen = document.getElementById('screen');
     $.wall = document.getElementById('wall');
     $.bricks = document.getElementById('bricks');
