@@ -1,5 +1,5 @@
 # Down the Drain
-This is an an entry for js13kGames 2017. The theme for this year is "Lost", and in this case you've lost your mobile phone down the drain.
+This is an an entry for [js13kGames 2017](https://js13kgames.com/entries/2017). The theme for this year is "Lost", and in this case you've lost your mobile phone down the drain.
 
 ![Screenshot](img/screenshot_1.jpg)
 
